@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+:root {
+  --font-body: Inter, system-ui, -apple-system, sans-serif;
+  --font-serif: 'Playfair Display', serif;
+}
+body {
+  font-family: var(--font-body);
+}
+.font-serif {
+  font-family: var(--font-serif);
+}
