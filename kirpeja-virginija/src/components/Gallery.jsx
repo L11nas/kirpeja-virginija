@@ -1,70 +1,29 @@
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-const images = [
-  '/2.webp',
-  '/3.webp',
-  '/4.webp',
-  '/5.webp',
-  '/6.webp',
-  '/7.webp',
-  '/8.webp',
-  '/9.webp',
-  '/10.webp',
-  '/11.webp',
-  '/12.webp',
-  '/13.webp',
-  '/14.webp',
-  '/15.webp',
-  '/16.webp',
-  '/17.webp',
-  '/18.webp',
-  '/19.webp',
-  '/20.webp',
-  '/21.webp',
-  '/22.webp',
-  '/23.webp',
-  '/24.webp',
-  '/25.webp',
-  '/26.webp',
-  '/27.webp',
-  '/29.webp',
-  '/30.webp',
-  '/31.webp',
-  '/32.webp',
-  '/33.webp',
-  '/34.webp',
-  '/35.webp',
-  '/36.webp',
-  '/37.webp',
-  '/38.webp',
-  '/39.webp',
-  '/40.webp',
-  '/41.webp',
-  '/42.webp',
-  '/43.webp',
-  '/44.webp',
-  '/45.webp',
-  '/46.webp',
-  '/47.webp',
-  '/48.webp',
-  '/49.webp',
-  '/50.webp',
-  '/51.webp',
-];
+const TOTAL_IMAGES = 51;
+
+// automatiškai sugeneruoja masyvą su visais keliais
+const images = Array.from({ length: TOTAL_IMAGES - 1 }, (_, i) => ({
+  thumb: `/${i + 2}.webp`,
+  full: `/${i + 2}.webp`,
+}));
 
 export default function Gallery() {
   const [selected, setSelected] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(12); // pradžioje rodom 12
   const { lang } = useLanguage();
 
   const t = {
     LT: {
       title: 'Galerija',
       alt: (i) => `Kirpėja Virginija – nuotrauka ${i}`,
+      more: 'Rodyti daugiau',
     },
     EN: {
       title: 'Gallery',
       alt: (i) => `Hairdresser Virginija – photo ${i}`,
+      more: 'Show more',
     },
   };
 
@@ -77,21 +36,34 @@ export default function Gallery() {
 
         {/* Image grid */}
         <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
-          {images.map((src, index) => (
+          {images.slice(0, visibleCount).map((img, index) => (
             <div
               key={index}
               className='cursor-pointer overflow-hidden rounded-xl group'
-              onClick={() => setSelected(src)}
+              onClick={() => setSelected(img.full)}
             >
               <img
-                src={src}
+                src={img.thumb}
+                data-full={img.full}
                 alt={t[lang].alt(index + 1)}
                 loading='lazy'
-                className='object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300'
+                className='object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300 bg-[#EDEBE8]'
               />
             </div>
           ))}
         </div>
+
+        {/* "Rodyti daugiau" mygtukas */}
+        {visibleCount < images.length && (
+          <div className='text-center mt-10'>
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 9)}
+              className='px-6 py-2 bg-[#C1A173] hover:bg-[#a88b5f] text-white rounded-md transition'
+            >
+              {t[lang].more}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Modal */}
@@ -104,6 +76,7 @@ export default function Gallery() {
             src={selected}
             alt={t[lang].alt('didelė')}
             className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl'
+            loading='eager'
           />
         </div>
       )}

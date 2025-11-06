@@ -31,6 +31,7 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload='none'
       />
       <div className='absolute inset-0 bg-black/30' />
 
