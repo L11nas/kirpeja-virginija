@@ -42,7 +42,6 @@ function AppContent() {
       <Hero />
       <Services />
       <Gallery />
-
       <Footer />
     </div>
   );

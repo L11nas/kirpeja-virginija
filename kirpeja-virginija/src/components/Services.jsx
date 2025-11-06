@@ -3,20 +3,29 @@ import { useLanguage } from '../context/LanguageContext';
 export default function Services() {
   const { lang } = useLanguage();
 
-  // Paslaugų sąrašas su vertimais
+  const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
+
+  // Atnaujintas sąrašas pagal Treatwell struktūrą
   const services = [
-    { lt: 'Vyriškas kirpimas', en: 'Men’s haircut', price: 'nuo 10 €' },
+    {
+      lt: 'Vyriškas kirpimas',
+      en: 'Men’s haircut',
+      price: '13 €',
+    },
     {
       lt: 'Plaukų kirpimas ir barzdos modeliavimas',
       en: 'Haircut & beard styling',
+      price: '17 €',
+    },
+    {
+      lt: 'Moterų kirpimas',
+      en: 'Women’s haircut',
       price: '15 €',
     },
-    { lt: 'Moterų kirpimas', en: 'Women’s haircut', price: '15 €' },
-    { lt: 'Vaikų kirpimas', en: 'Children’s haircut', price: '12 €' },
     {
-      lt: 'Plaukų dažymas ir tonavimas',
-      en: 'Hair coloring & toning',
-      price: '25 €',
+      lt: 'Vaikų kirpimas',
+      en: 'Children’s haircut',
+      price: '13 €',
     },
     {
       lt: 'Plaukų pynimas su pluoštu',
@@ -25,12 +34,10 @@ export default function Services() {
     },
     {
       lt: 'Cheminis sušukavimas',
-      en: 'Perm (chemical styling)',
+      en: 'Chemical styling (perm)',
       price: '40 €',
     },
   ];
-
-  const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
   return (
     <section className='py-20 bg-white' id='paslaugos'>
@@ -56,7 +63,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Bendras kvietimas apačioje */}
+        {/* Bendras mygtukas */}
         <a
           href={treatwellUrl}
           target='_blank'

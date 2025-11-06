@@ -19,7 +19,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className='bg-white py-10 border-t border-[#e5e4e1]'>
+    <footer id='kontaktai' className='bg-white py-10 border-t border-[#e5e4e1]'>
       <div className='max-w-5xl mx-auto text-center text-[#3E3B38] space-y-2'>
         <p className='font-serif text-lg'>Kirpėja Virginija</p>
         <p>{t[lang].address}</p>

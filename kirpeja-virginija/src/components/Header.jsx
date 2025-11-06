@@ -65,9 +65,17 @@ export default function Header() {
           <a href='#galerija' className='hover:text-[#C1A173] transition'>
             {t[lang].gallery}
           </a>
-          <a href='#kontaktai' className='hover:text-[#C1A173] transition'>
+          <button
+            onClick={() => {
+              const el = document.getElementById('kontaktai');
+              if (el) {
+                el.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            className='hover:text-[#C1A173] transition'
+          >
             {t[lang].contact}
-          </a>
+          </button>
 
           {/* Kalbos mygtukai */}
           <div className='flex items-center gap-2 border border-[#C1A173] rounded-md overflow-hidden'>
