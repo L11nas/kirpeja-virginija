@@ -3,15 +3,16 @@ import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 
 const TOTAL_IMAGES = 34;
-const DIR = '/gallery';
+const DIR_FULL = '/gallery/full';
+const DIR_THUMBS = '/gallery/thumbs';
 const EXT = 'webp';
 
 // automatiškai sugeneruoja masyvą su visais keliais
 const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
   const n = i + 1;
   return {
-    full: `${DIR}/${n}.${EXT}`, // pagrindinė versija
-    blur: `${DIR}/${n}_small.${EXT}`, // mažoji 100–200px blur versija
+    full: `${DIR_FULL}/${n}.${EXT}`, // pilna rezoliucija
+    blur: `${DIR_THUMBS}/${n}.${EXT}`, // maža / thumbnail versija
     index: n,
   };
 });
