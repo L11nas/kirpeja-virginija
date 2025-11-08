@@ -1,17 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
-const TOTAL_IMAGES = 51;
+const TOTAL_IMAGES = 34;
 
 // automatiškai sugeneruoja masyvą su visais keliais
-const images = Array.from({ length: TOTAL_IMAGES - 1 }, (_, i) => ({
-  thumb: `/${i + 2}.webp`,
-  full: `/${i + 2}.webp`,
+const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => ({
+  thumb: `/gallery/${i + 1}.webp`,
+  full: `/gallery/${i + 1}.webp`,
 }));
 
 export default function Gallery() {
   const [selected, setSelected] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(12); // pradžioje rodom 12
+  const [visibleCount, setVisibleCount] = useState(12);
   const { lang } = useLanguage();
 
   const t = {
@@ -26,6 +26,15 @@ export default function Gallery() {
       more: 'Show more',
     },
   };
+
+  // uždaryti modalą ESC klavišu
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setSelected(null);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   return (
     <section className='py-20 bg-[#F8F7F4]' id='galerija'>
@@ -44,7 +53,6 @@ export default function Gallery() {
             >
               <img
                 src={img.thumb}
-                data-full={img.full}
                 alt={t[lang].alt(index + 1)}
                 loading='lazy'
                 className='object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300 bg-[#EDEBE8]'
@@ -53,7 +61,7 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* "Rodyti daugiau" mygtukas */}
+        {/* Rodyti daugiau */}
         {visibleCount < images.length && (
           <div className='text-center mt-10'>
             <button
