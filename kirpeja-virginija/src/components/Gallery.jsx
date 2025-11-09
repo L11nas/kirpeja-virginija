@@ -3,16 +3,15 @@ import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 
 const TOTAL_IMAGES = 34;
-const DIR_FULL = '/gallery/full';
 const DIR_THUMBS = '/gallery/thumbs';
+const DIR_FULL = '/gallery/full';
 const EXT = 'webp';
 
-// automatiškai sugeneruoja masyvą su visais keliais
 const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
   const n = i + 1;
   return {
-    full: `${DIR_FULL}/${n}.${EXT}`, // pilna rezoliucija
-    blur: `${DIR_THUMBS}/${n}.${EXT}`, // maža / thumbnail versija
+    thumb: `${DIR_THUMBS}/${n}.${EXT}`,
+    full: `${DIR_FULL}/${n}.${EXT}`,
     index: n,
   };
 });
@@ -35,7 +34,6 @@ export default function Gallery() {
     },
   };
 
-  // leidžia uždaryti modal ESC klavišu
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && setSelected(null);
     window.addEventListener('keydown', onKey);
@@ -44,10 +42,10 @@ export default function Gallery() {
 
   return (
     <section id='galerija' className='py-20 bg-[#F8F7F4]'>
-      {/* Preload pirmoms 3 nuotraukoms */}
+      {/* Preload pirmoms 3 mažoms nuotraukoms */}
       <Helmet>
         {images.slice(0, 3).map((img) => (
-          <link key={img.index} rel='preload' as='image' href={img.full} />
+          <link key={img.index} rel='preload' as='image' href={img.thumb} />
         ))}
       </Helmet>
 
@@ -56,6 +54,7 @@ export default function Gallery() {
           {t[lang].title}
         </h2>
 
+        {/* Paveikslų tinklelis */}
         <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
           {images.slice(0, visible).map((img, i) => (
             <button
@@ -64,26 +63,18 @@ export default function Gallery() {
               className='cursor-pointer overflow-hidden rounded-xl group relative'
               aria-label={t[lang].alt(img.index)}
             >
-              {/* blur-up fono sluoksnis */}
-              <div
-                className='absolute inset-0 bg-center bg-cover blur-lg scale-110'
-                style={{
-                  backgroundImage: `url(${img.blur})`,
-                }}
-              />
-              {/* tikrasis paveikslas */}
               <img
-                src={img.full}
+                src={img.thumb}
                 alt={t[lang].alt(img.index)}
-                loading={i < 4 ? 'eager' : 'lazy'}
-                fetchpriority={i < 2 ? 'high' : 'auto'}
+                loading='lazy'
                 decoding='async'
-                className='relative object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300'
+                className='object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300 bg-[#EDEBE8]'
               />
             </button>
           ))}
         </div>
 
+        {/* Rodyti daugiau */}
         {visible < images.length && (
           <div className='text-center mt-10'>
             <button
@@ -96,20 +87,17 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* Modal */}
+      {/* Modal su didesne kokybe */}
       {selected && (
         <div
           className='fixed inset-0 bg-black/80 flex items-center justify-center z-50'
           onClick={() => setSelected(null)}
-          role='dialog'
-          aria-modal='true'
         >
           <img
             src={selected}
             alt={t[lang].alt('didelė')}
             className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl'
             loading='eager'
-            decoding='async'
           />
         </div>
       )}
