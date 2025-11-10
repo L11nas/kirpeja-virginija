@@ -68,7 +68,7 @@ export default function Gallery() {
                 alt={t[lang].alt(img.index)}
                 loading='lazy'
                 decoding='async'
-                className='object-cover w-full h-64 group-hover:scale-105 transition-transform duration-300 bg-[#EDEBE8]'
+                className='object-cover w-full h-64 absolute inset-0 group-hover:scale-105 transition duration-300 blur-0'
               />
             </button>
           ))}
