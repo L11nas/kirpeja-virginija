@@ -1,18 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="lt">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ✅ Page identity -->
+    <title>Kirpėja Virginija | Kirpimas ir plaukų priežiūra Kaune</title>
+    <meta
+      name="description"
+      content="Kirpėja Virginija – profesionalus vyrų ir moterų kirpimas, dažymas, barzdos modeliavimas bei plaukų priežiūra Kaune. Jauki atmosfera ir dėmesys detalėms."
+    />
+
+    <!-- ✅ Favicon / PWA / Brand -->
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <meta name="theme-color" content="#C1A173" />
+
+    <!-- ✅ Font optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:wght@600;700&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK4lP3zCwYg.ttf"
+      crossorigin
+    />
 
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>kirpeja-virginija</title>
+    <!-- ✅ SEO / Social (base layer, React helmet will override dynamically) -->
+    <meta property="og:site_name" content="Kirpėja Virginija" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/img/hero-bg.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- ✅ Fallback structured data (basic local business snippet) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HairSalon",
+        "name": "Kirpėja Virginija",
+        "url": "https://kirpeja-virginija.lt",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Pramonės pr. 15A",
+          "addressLocality": "Kaunas",
+          "addressCountry": "LT"
+        },
+        "telephone": "+37065460937"
+      }
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
