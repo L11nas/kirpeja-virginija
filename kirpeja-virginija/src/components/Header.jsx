@@ -1,15 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
-  const lastScrollY = useRef(0);
   const { lang, toggleLang } = useLanguage();
 
+  // Translations
   const t = {
     LT: {
       services: "Paslaugos",
@@ -25,50 +25,22 @@ export default function Header() {
     },
   };
 
-  // HEADER VISIBILITY ON SCROLL (premium behavior)
+  // Scroll detection for shadow and hide-on-scroll effect
   useEffect(() => {
-    const handleScroll = () => {
+    let lastScrollY = window.scrollY;
+
+    const onScroll = () => {
       const current = window.scrollY;
-      setScrolled(current > 30);
 
-      if (current > lastScrollY.current && current > 150) {
-        setHidden(true);   // scrolling down → hide
-      } else {
-        setHidden(false);  // scrolling up → show
-      }
-      lastScrollY.current = current;
+      setScrolled(current > 20);
+      setHidden(current > lastScrollY && current > 80);
+
+      lastScrollY = current;
     };
 
-    const throttled = () => {
-      if (!handleScroll._throttle) {
-        handleScroll();
-        handleScroll._throttle = setTimeout(
-          () => (handleScroll._throttle = null),
-          80
-        );
-      }
-    };
-
-    window.addEventListener("scroll", throttled);
-    return () => window.removeEventListener("scroll", throttled);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  // Smooth scroll with offset
-  const scrollToId = (id) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const offset = 85;
-    const y = el.getBoundingClientRect().top + window.scrollY - offset;
-
-    window.scrollTo({ top: y, behavior: "smooth" });
-    setMenuOpen(false);
-  };
-
-  const navItems = [
-    { id: "paslaugos", key: "services" },
-    { id: "galerija", key: "gallery" },
-    { id: "kontaktai", key: "contact" },
-  ];
 
   return (
     <header
@@ -77,53 +49,44 @@ export default function Header() {
         ${hidden ? "-translate-y-full" : "translate-y-0"}
         ${scrolled ? "bg-white/90 backdrop-blur-xl shadow-md" : "bg-white/80"}
       `}
-      role="banner"
-      aria-label={lang === "LT" ? "Pagrindinė navigacija" : "Main navigation"}
     >
       <div className="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
 
-        {/* LOGO */}
-        <button
-          onClick={() => scrollToId("hero")}
-          className="flex items-center transition hover:opacity-80"
-          aria-label={lang === "LT" ? "Į pradžią" : "Go to top"}
+        {/* Logo */}
+        <a
+          href="#hero"
+          className="flex items-center gap-2 hover:opacity-90 transition"
         >
-          <h1 className="leading-tight font-serif text-[#3E3B38] text-left">
+          <h1 className="leading-tight font-serif text-[#3E3B38]">
             <span className="block text-lg">Kirpėja</span>
             <span className="block -mt-1 text-[#C1A173]">Virginija</span>
           </h1>
-        </button>
+        </a>
 
-        {/* DESKTOP NAV */}
-        <nav className="hidden md:flex items-center gap-8 text-[#3E3B38]" role="navigation">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToId(item.id)}
-              className="relative group transition"
-            >
-              {t[lang][item.key]}
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center gap-6 text-[#3E3B38]">
+          <a href="#paslaugos" className="hover:text-[#C1A173] transition">
+            {t[lang].services}
+          </a>
+          <a href="#galerija" className="hover:text-[#C1A173] transition">
+            {t[lang].gallery}
+          </a>
+          <a href="#kontaktai" className="hover:text-[#C1A173] transition">
+            {t[lang].contact}
+          </a>
 
-              {/* Animated underline */}
-              <span className="
-                absolute left-0 -bottom-1 h-[2px] w-0 bg-[#C1A173] 
-                transition-all duration-300 group-hover:w-full
-              " />
-            </button>
-          ))}
-
-          {/* LANGUAGE SWITCH */}
-          <div className="flex items-center gap-1 border border-[#C1A173] rounded-md overflow-hidden">
+          {/* Language Switch */}
+          <div className="flex items-center gap-2 border border-[#C1A173] rounded-md overflow-hidden">
             {["LT", "EN"].map((code) => (
               <button
                 key={code}
                 onClick={toggleLang}
+                aria-pressed={lang === code ? "true" : "false"}
                 className={`px-3 py-1 text-sm transition ${
                   lang === code
                     ? "bg-[#C1A173] text-white"
                     : "text-[#C1A173] hover:bg-[#C1A173]/20"
                 }`}
-                aria-pressed={lang === code}
               >
                 {code}
               </button>
@@ -135,13 +98,13 @@ export default function Header() {
             href="https://book.treatwell.lt/salonas/kirpeja-virginija/"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[#C1A173] hover:bg-[#a88b5f] text-white px-4 py-2 rounded-md transition font-medium shadow-sm"
+            className="bg-[#C1A173] hover:bg-[#a88b5f] text-white px-4 py-2 rounded-md transition font-medium"
           >
             {t[lang].book}
           </a>
         </nav>
 
-        {/* MOBILE ICON */}
+        {/* Mobile Menu Icon */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="md:hidden text-[#3E3B38]"
@@ -151,37 +114,43 @@ export default function Header() {
         </button>
       </div>
 
-      {/* MOBILE DROPDOWN */}
-      <nav
-        className={`
-          md:hidden overflow-hidden transition-all duration-300 bg-white
-          border-t border-[#e5e4e1] text-center
-          ${menuOpen ? "max-h-96 py-4 opacity-100" : "max-h-0 opacity-0 py-0"}
-        `}
-        role="navigation"
-      >
-        <div className="space-y-4">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => scrollToId(item.id)}
-              className="block w-full text-[#3E3B38] hover:text-[#C1A173] transition"
-            >
-              {t[lang][item.key]}
-            </button>
-          ))}
+      {/* Mobile Dropdown */}
+      {menuOpen && (
+        <nav className="md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3">
+          <a
+            href="#paslaugos"
+            onClick={() => setMenuOpen(false)}
+            className="block text-[#3E3B38] hover:text-[#C1A173] transition"
+          >
+            {t[lang].services}
+          </a>
 
-          {/* CTA MOBILE */}
+          <a
+            href="#galerija"
+            onClick={() => setMenuOpen(false)}
+            className="block text-[#3E3B38] hover:text-[#C1A173] transition"
+          >
+            {t[lang].gallery}
+          </a>
+
+          <a
+            href="#kontaktai"
+            onClick={() => setMenuOpen(false)}
+            className="block text-[#3E3B38] hover:text-[#C1A173] transition"
+          >
+            {t[lang].contact}
+          </a>
+
           <a
             href="https://book.treatwell.lt/salonas/kirpeja-virginija/"
             target="_blank"
             rel="noopener noreferrer"
-            className="block bg-[#C1A173] text-white mx-10 py-2 rounded-md hover:bg-[#a88b5f] transition shadow"
+            className="block bg-[#C1A173] text-white mx-6 py-2 rounded-md hover:bg-[#a88b5f] transition"
           >
             {t[lang].book}
           </a>
-        </div>
-      </nav>
+        </nav>
+      )}
     </header>
   );
 }
