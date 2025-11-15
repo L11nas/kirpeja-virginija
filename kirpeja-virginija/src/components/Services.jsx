@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
+import Button from '../components/ui/Button';
 
 export default function Services() {
   const { lang } = useLanguage();
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
-  // Paslaugos — SEO friendly aprašymai
   const services = [
     {
       lt: 'Vyriškas kirpimas – klasikinis arba modernus stilius pagal kliento pageidavimus.',
@@ -50,7 +50,11 @@ export default function Services() {
   ];
 
   return (
-    <section id='paslaugos' className='py-20 bg-white'>
+    <section
+      id='paslaugos'
+      className='py-20 bg-white'
+      aria-labelledby='services-heading'
+    >
       {/* --- SEO META --- */}
       <Helmet>
         <title>
@@ -58,6 +62,7 @@ export default function Services() {
             ? 'Kirpėja Virginija – Paslaugos ir kainos Kaune'
             : 'Hairdresser Virginija – Services and Prices in Kaunas'}
         </title>
+
         <meta
           name='description'
           content={
@@ -66,7 +71,9 @@ export default function Services() {
               : 'Hairdresser Virginija offers men’s, women’s and children’s haircuts, beard styling and braiding in Kaunas. Book online via Treatwell.'
           }
         />
+
         <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
+
         <meta
           property='og:title'
           content='Kirpėja Virginija – paslaugos ir kainos'
@@ -123,14 +130,17 @@ export default function Services() {
       </Helmet>
 
       <div className='max-w-5xl mx-auto px-6 text-center'>
-        <h2 className='text-3xl font-serif mb-10 text-[#3E3B38]'>
+        {/* Heading with ID for accessibility */}
+        <h2
+          id='services-heading'
+          className='text-3xl font-serif mb-10 text-[#3E3B38]'
+        >
           {lang === 'LT' ? 'Teikiamos paslaugos' : 'Available Services'}
         </h2>
 
         {/* --- Paslaugų tinklelis --- */}
         <div
           className='grid md:grid-cols-2 gap-6'
-          role='list'
           aria-label={lang === 'LT' ? 'Kirpimo paslaugos' : 'Hair services'}
         >
           {services.map((item, i) => (
@@ -152,22 +162,23 @@ export default function Services() {
                   {lang === 'LT' ? item.lt : item.en}
                 </p>
               </div>
-              <span className='font-semibold text-[#C1A173] text-lg whitespace-nowrap'>
+
+              {/* Improved contrast */}
+              <span className='font-semibold text-[#A1845F] text-lg whitespace-nowrap'>
                 {item.price}
               </span>
             </a>
           ))}
         </div>
 
-        {/* --- Mygtukas --- */}
-        <a
+        {/* CTA */}
+        <Button
           href={treatwellUrl}
-          target='_blank'
-          rel='noreferrer'
-          className='inline-block mt-10 px-8 py-3 bg-[#C1A173] text-white font-medium rounded-md hover:bg-[#a88b5f] transition'
-        >
-          {lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'}
-        </a>
+          label={
+            lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'
+          }
+          className='mt-10'
+        />
       </div>
     </section>
   );

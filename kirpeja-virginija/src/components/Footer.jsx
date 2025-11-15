@@ -34,15 +34,27 @@ export default function Footer() {
   return (
     <footer
       id='kontaktai'
+      role='contentinfo'
       className='bg-white py-12 border-t border-[#e5e4e1]'
       itemScope
       itemType='https://schema.org/LocalBusiness'
     >
+      <meta itemProp='name' content='Kirpėja Virginija' />
+
+      {/* ADDRESS SCHEMA */}
+      <div
+        itemProp='address'
+        itemScope
+        itemType='https://schema.org/PostalAddress'
+      >
+        <meta itemProp='streetAddress' content='Pramonės pr. 15A' />
+        <meta itemProp='addressLocality' content='Kaunas' />
+        <meta itemProp='addressCountry' content='LT' />
+      </div>
+
       <div className='max-w-5xl mx-auto text-center text-[#3E3B38] space-y-2'>
         {/* Pavadinimas */}
-        <p className='font-serif text-xl text-[#2E2B29]' itemProp='name'>
-          Kirpėja Virginija
-        </p>
+        <p className='font-serif text-xl text-[#2E2B29]'>Kirpėja Virginija</p>
 
         {/* Adresas */}
         <p>
@@ -51,8 +63,7 @@ export default function Footer() {
             href={googleMapUrl}
             target='_blank'
             rel='noopener noreferrer'
-            className='underline hover:text-[#C1A173]'
-            itemProp='address'
+            className='underline hover:text-[#8A744F]'
           >
             {t[lang].address}
           </a>
@@ -63,7 +74,7 @@ export default function Footer() {
           <span className='font-medium'>{t[lang].phoneLabel}</span>{' '}
           <a
             href={`tel:${t[lang].phone.replace(/\s+/g, '')}`}
-            className='underline hover:text-[#C1A173]'
+            className='underline hover:text-[#8A744F]'
             itemProp='telephone'
           >
             {t[lang].phone}
@@ -73,25 +84,25 @@ export default function Footer() {
         {/* Darbo laikas */}
         <p>
           <span className='font-medium'>{t[lang].hoursLabel}</span>{' '}
-          {t[lang].hours}
+          <span itemProp='openingHours'>{t[lang].hours}</span>
         </p>
 
-        {/* Facebook nuoroda */}
+        {/* Facebook */}
         <div className='flex justify-center items-center gap-2 mt-3'>
           <a
             href={facebookUrl}
             target='_blank'
             rel='noopener noreferrer'
             aria-label={t[lang].fb}
-            className='text-[#3E3B38] hover:text-[#C1A173] transition flex items-center gap-1'
+            className='text-[#3E3B38] hover:text-[#8A744F] transition flex items-center gap-1'
           >
-            <Facebook size={20} strokeWidth={1.5} />
+            <Facebook size={20} strokeWidth={1.6} />
             <span className='text-sm'>{t[lang].fb}</span>
           </a>
         </div>
 
-        {/* Apatinis tekstas */}
-        <p className='text-sm text-[#777] mt-4'>
+        {/* Copyright */}
+        <p className='text-sm text-[#6C6C6C] mt-4'>
           © {new Date().getFullYear()} Kirpėja Virginija. {t[lang].rights}
         </p>
       </div>

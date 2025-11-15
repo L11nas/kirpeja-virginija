@@ -1,29 +1,17 @@
+/* GLOBAL RESET */
 #root {
   width: 100%;
   margin: 0;
   padding: 0;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-/* HERO foninė animacija */
+/* HERO background animation */
 .hero-animate {
-  animation: zoomIn 12s ease-in-out infinite alternate,
+  animation: zoomIn 6s ease-in-out infinite alternate,
     subtleLight 10s ease-in-out infinite alternate;
-  will-change: transform, filter;
 }
 
-/* Švelnus priartinimo efektas */
+/* Zoom-in movement */
 @keyframes zoomIn {
   0% {
     transform: scale(1);
@@ -33,7 +21,7 @@
   }
 }
 
-/* Šviesumo pulsavimas */
+/* Light pulsation */
 @keyframes subtleLight {
   0% {
     filter: brightness(1);
@@ -41,27 +29,4 @@
   100% {
     filter: brightness(1.05);
   }
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 3s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }

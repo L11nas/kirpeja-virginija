@@ -7,14 +7,11 @@ const DIR_THUMBS = '/gallery/thumbs';
 const DIR_FULL = '/gallery/full';
 const EXT = 'webp';
 
-const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => {
-  const n = i + 1;
-  return {
-    thumb: `${DIR_THUMBS}/${n}.${EXT}`,
-    full: `${DIR_FULL}/${n}.${EXT}`,
-    index: n,
-  };
-});
+const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => ({
+  thumb: `${DIR_THUMBS}/${i + 1}.${EXT}`,
+  full: `${DIR_FULL}/${i + 1}.${EXT}`,
+  index: i + 1,
+}));
 
 export default function Gallery() {
   const { lang } = useLanguage();
@@ -28,80 +25,36 @@ export default function Gallery() {
       alt: (i) =>
         `Kirpėja Virginija – nuotrauka ${i}, kirpimas ir šukuosenos Kaune`,
       more: 'Rodyti daugiau',
+      close: 'Uždaryti nuotrauką',
     },
     EN: {
       title: 'Gallery',
-      desc: 'Hairdresser Virginija – professional haircut & hairstyle gallery in Kaunas, Lithuania.',
+      desc: 'Hairdresser Virginija – professional haircut & hairstyle gallery in Kaunas.',
       alt: (i) =>
         `Hairdresser Virginija – photo ${i}, professional hairstyles in Kaunas`,
       more: 'Show more',
+      close: 'Close image',
     },
   };
 
+  // ESC close listener
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && setSelected(null);
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const handleKey = (e) => e.key === 'Escape' && setSelected(null);
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
   return (
     <section
       id='galerija'
-      className='py-20 bg-[#F8F7F4]'
       aria-labelledby='gallery-heading'
+      className='py-20 bg-[#F8F7F4]'
+      role='region'
     >
-      {/* --- SEO Head Meta --- */}
       <Helmet>
         <title>{`${t[lang].title} | Kirpėja Virginija Kaunas`}</title>
         <meta name='description' content={t[lang].desc} />
-        <meta
-          property='og:title'
-          content={`${t[lang].title} | Kirpėja Virginija`}
-        />
-        <meta property='og:description' content={t[lang].desc} />
-        <meta property='og:type' content='website' />
-        <meta
-          property='og:locale'
-          content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
-        />
         <link rel='canonical' href='https://kirpeja-virginija.lt/#galerija' />
-
-        {/* Preload pirmoms 3 miniatiūroms */}
-        {images.slice(0, 3).map((img) => (
-          <link
-            key={img.index}
-            rel='preload'
-            as='image'
-            href={img.thumb}
-            imagesrcset={`${img.thumb} 1x, ${img.full} 2x`}
-          />
-        ))}
-
-        {/* JSON-LD struktūrizuotas turinys */}
-        <script type='application/ld+json'>
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'ImageGallery',
-            name:
-              lang === 'LT'
-                ? 'Kirpėja Virginija – darbų galerija'
-                : 'Hairdresser Virginija – hairstyle gallery',
-            description: t[lang].desc,
-            url: 'https://kirpeja-virginija.lt/#galerija',
-            image: images
-              .slice(0, 5)
-              .map((img) => `https://kirpeja-virginija.lt${img.full}`),
-            author: {
-              '@type': 'LocalBusiness',
-              name: 'Kirpėja Virginija',
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Kaunas',
-                addressCountry: 'LT',
-              },
-            },
-          })}
-        </script>
       </Helmet>
 
       <div className='max-w-6xl mx-auto px-6'>
@@ -112,38 +65,38 @@ export default function Gallery() {
           {t[lang].title}
         </h2>
 
-        {/* --- Paveikslų tinklelis --- */}
-        <div
+        {/* ---- ACCESSIBLE LIST ---- */}
+        <ul
           className='grid grid-cols-2 md:grid-cols-3 gap-4'
-          role='list'
           aria-label={t[lang].title}
         >
           {images.slice(0, visible).map((img) => (
-            <button
-              key={img.index}
-              onClick={() => setSelected(img.full)}
-              className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all'
-              aria-label={t[lang].alt(img.index)}
-            >
-              <img
-                src={img.thumb}
-                alt={t[lang].alt(img.index)}
-                loading='lazy'
-                decoding='async'
-                width='400'
-                height='400'
-                className='object-cover w-full h-64 transition-transform duration-300 group-hover:scale-105 bg-[#EDEBE8]'
-              />
-            </button>
+            <li key={img.index} className='list-none'>
+              <button
+                onClick={() => setSelected(img.full)}
+                aria-label={t[lang].alt(img.index)}
+                className='relative overflow-hidden rounded-xl group w-full focus:outline-none focus:ring-2 focus:ring-[#8A744F] transition'
+              >
+                <img
+                  src={img.thumb}
+                  alt={t[lang].alt(img.index)}
+                  loading='lazy'
+                  decoding='async'
+                  width='400'
+                  height='400'
+                  className='object-cover w-full h-64 transition-transform duration-300 group-hover:scale-105 bg-[#EDEBE8]'
+                />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
 
-        {/* --- Rodyti daugiau --- */}
+        {/* ---- LOAD MORE ---- */}
         {visible < images.length && (
           <div className='text-center mt-10'>
             <button
               onClick={() => setVisible((v) => v + 9)}
-              className='px-6 py-2 bg-[#C1A173] hover:bg-[#a88b5f] text-white rounded-md transition'
+              className='px-6 py-2 bg-[#8A744F] hover:bg-[#746042] text-white rounded-md transition focus:ring-2 focus:ring-[#8A744F]'
             >
               {t[lang].more}
             </button>
@@ -151,25 +104,35 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* --- Modal su pilno dydžio nuotrauka --- */}
+      {/* ---- MODAL ---- */}
       {selected && (
         <div
           className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'
-          onClick={() => setSelected(null)}
+          role='dialog'
+          aria-modal='true'
           aria-label={
             lang === 'LT' ? 'Pilno dydžio nuotrauka' : 'Full size photo'
           }
+          onClick={() => setSelected(null)}
         >
-          <img
-            src={selected}
-            alt={
-              lang === 'LT'
-                ? 'Kirpyklos darbo nuotrauka'
-                : 'Hair salon work photo'
-            }
-            className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10'
-            loading='eager'
-          />
+          <div className='relative'>
+            <button
+              onClick={() => setSelected(null)}
+              aria-label={t[lang].close}
+              className='absolute top-3 right-3 bg-white/70 hover:bg-white text-black rounded-full p-2 text-sm font-semibold shadow focus:ring-2 focus:ring-white'
+            >
+              ✕
+            </button>
+
+            <img
+              src={selected}
+              alt={
+                lang === 'LT' ? 'Kirpyklos darbo nuotrauka' : 'Hair salon work'
+              }
+              className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10'
+              loading='eager'
+            />
+          </div>
         </div>
       )}
     </section>
