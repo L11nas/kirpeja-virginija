@@ -6,7 +6,7 @@ export default function Services() {
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
-  // --- Paslaugos: SEO-friendly struktūra ---
+  // --- Paslaugos ---
   const services = [
     {
       id: 'mens-haircut',
@@ -98,11 +98,25 @@ export default function Services() {
 
         <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
 
-        <meta property='og:title' content='Kirpėja Virginija – paslaugos' />
+        {/* Dinaminis OG title pagal kalbą */}
+        <meta
+          property='og:title'
+          content={
+            lang === 'LT'
+              ? 'Kirpėja Virginija – Paslaugos'
+              : 'Hairdresser Virginija – Services'
+          }
+        />
+
         <meta
           property='og:description'
-          content='Profesionalios kirpimo ir grožio paslaugos Kaune.'
+          content={
+            lang === 'LT'
+              ? 'Profesionalios kirpimo ir grožio paslaugos Kaune.'
+              : 'Professional hairdressing and beauty services in Kaunas.'
+          }
         />
+
         <meta property='og:type' content='service' />
         <meta
           property='og:locale'
@@ -123,7 +137,7 @@ export default function Services() {
               addressLocality: 'Kaunas',
               addressCountry: 'LT',
             },
-            priceRange: '€€',
+            priceRange: '€13–€40',
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name:
@@ -181,6 +195,7 @@ export default function Services() {
                   {lang === 'LT' ? item.desc.lt : item.desc.en}
                 </p>
               </div>
+
               <span className='font-semibold text-[#C1A173] text-lg whitespace-nowrap'>
                 {item.price}
               </span>
@@ -188,7 +203,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* --- CTA Mygtukas --- */}
+        {/* CTA */}
         <a
           href={treatwellUrl}
           target='_blank'

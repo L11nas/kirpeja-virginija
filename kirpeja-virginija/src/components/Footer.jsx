@@ -41,7 +41,6 @@ export default function Footer() {
     >
       <meta itemProp='name' content='Kirpėja Virginija' />
 
-      {/* ADDRESS SCHEMA */}
       <div
         itemProp='address'
         itemScope
@@ -53,10 +52,8 @@ export default function Footer() {
       </div>
 
       <div className='max-w-5xl mx-auto text-center text-[#3E3B38] space-y-2'>
-        {/* Pavadinimas */}
         <p className='font-serif text-xl text-[#2E2B29]'>Kirpėja Virginija</p>
 
-        {/* Adresas */}
         <p>
           <span className='font-medium'>{t[lang].addressLabel}</span>{' '}
           <a
@@ -69,7 +66,6 @@ export default function Footer() {
           </a>
         </p>
 
-        {/* Telefonas */}
         <p>
           <span className='font-medium'>{t[lang].phoneLabel}</span>{' '}
           <a
@@ -81,13 +77,11 @@ export default function Footer() {
           </a>
         </p>
 
-        {/* Darbo laikas */}
         <p>
           <span className='font-medium'>{t[lang].hoursLabel}</span>{' '}
           <span itemProp='openingHours'>{t[lang].hours}</span>
         </p>
 
-        {/* Facebook */}
         <div className='flex justify-center items-center gap-2 mt-3'>
           <a
             href={facebookUrl}
@@ -101,7 +95,6 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Copyright */}
         <p className='text-sm text-[#6C6C6C] mt-4'>
           © {new Date().getFullYear()} Kirpėja Virginija. {t[lang].rights}
         </p>

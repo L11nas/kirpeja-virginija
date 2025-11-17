@@ -5,9 +5,9 @@ import { useLanguage } from '../context/LanguageContext';
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false); // ← PRIDETA
   const { lang, toggleLang } = useLanguage();
 
-  // Translations
   const t = {
     LT: {
       services: 'Paslaugos',
@@ -23,7 +23,6 @@ export default function Header() {
     },
   };
 
-  // Scroll detection for shadow and hide-on-scroll effect
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
@@ -31,7 +30,7 @@ export default function Header() {
       const current = window.scrollY;
 
       setScrolled(current > 20);
-      setHidden(current > lastScrollY && current > 80);
+      setHidden(current > lastScrollY && current > 80); // ← DABAR VEIKIA
 
       lastScrollY = current;
     };
@@ -43,21 +42,18 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        hidden ? '-translate-y-full' : 'translate-y-0'
+      } ${
         scrolled
           ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-[#e5e4e1]'
           : 'bg-white/90 backdrop-blur-md border-b border-transparent'
       }`}
-      role='banner'
-      aria-label={
-        lang === 'LT' ? 'Puslapio viršutinė navigacija' : 'Website navigation'
-      }
     >
       <div className='max-w-6xl mx-auto flex justify-between items-center py-3 px-6'>
-        {/* Logo (text-based for better SEO) */}
+        {/* Logo */}
         <a
           href='#hero'
           className='flex items-center gap-2 hover:opacity-90 transition'
-          aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
         >
           <h1 className='leading-tight font-serif text-[#3E3B38]'>
             <span className='block text-lg'>Kirpėja</span>
@@ -66,10 +62,7 @@ export default function Header() {
         </a>
 
         {/* Desktop Navigation */}
-        <nav
-          className='hidden md:flex items-center gap-6 text-[#3E3B38]'
-          role='navigation'
-        >
+        <nav className='hidden md:flex items-center gap-6 text-[#3E3B38]'>
           <a href='#paslaugos' className='hover:text-[#C1A173] transition'>
             {t[lang].services}
           </a>
@@ -81,10 +74,7 @@ export default function Header() {
           </a>
 
           {/* Language Switch */}
-          <div
-            className='flex items-center gap-2 border border-[#C1A173] rounded-md overflow-hidden'
-            aria-label='Language selector'
-          >
+          <div className='flex items-center gap-2 border border-[#C1A173] rounded-md overflow-hidden'>
             {['LT', 'EN'].map((code) => (
               <button
                 key={code}
@@ -100,48 +90,56 @@ export default function Header() {
             ))}
           </div>
 
-          {/* CTA link */}
           <a
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
-            rel='noopener noreferrer'
-            className='bg-[#C1A173] hover:bg-[#a88b5f] text-white px-4 py-2 rounded-md transition font-medium'
+            className='bg-[#C1A173] hover:bg-[#a88b5f] text-white px-4 py-2 rounded-md'
           >
             {t[lang].book}
           </a>
         </nav>
 
-        {/* Mobile Menu Icon */}
+        {/* Mobile icon */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className='md:hidden text-[#3E3B38]'
-          aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
         >
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Menu */}
       {menuOpen && (
-        <nav
-          className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'
-          role='navigation'
-        >
-          {['paslaugos', 'galerija', 'kontaktai'].map((id, i) => (
-            <a
-              key={i}
-              href={`#${id}`}
-              className='block text-[#3E3B38] hover:text-[#C1A173] transition'
-              onClick={() => setMenuOpen(false)}
-            >
-              {t[lang][id === 'paslaugos' ? 'services' : id]}
-            </a>
-          ))}
+        <nav className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'>
+          {/* Manual map for correct translations */}
+          <a
+            href='#paslaugos'
+            className='block hover:text-[#C1A173]'
+            onClick={() => setMenuOpen(false)}
+          >
+            {t[lang].services}
+          </a>
+
+          <a
+            href='#galerija'
+            className='block hover:text-[#C1A173]'
+            onClick={() => setMenuOpen(false)}
+          >
+            {t[lang].gallery}
+          </a>
+
+          <a
+            href='#kontaktai'
+            className='block hover:text-[#C1A173]'
+            onClick={() => setMenuOpen(false)}
+          >
+            {t[lang].contact}
+          </a>
+
           <a
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
-            rel='noopener noreferrer'
-            className='block bg-[#C1A173] text-white mx-6 py-2 rounded-md hover:bg-[#a88b5f] transition'
+            className='block bg-[#C1A173] text-white mx-6 py-2 rounded-md'
           >
             {t[lang].book}
           </a>
@@ -153,12 +151,12 @@ export default function Header() {
                 <button
                   key={code}
                   onClick={() => {
-                    setLang(code);
+                    toggleLang();
                     setMenuOpen(false);
                   }}
-                  className={`px-4 py-1 text-sm font-medium rounded-full transition-all duration-200 ${
+                  className={`px-4 py-1 text-sm font-medium rounded-full ${
                     lang === code
-                      ? 'bg-primary text-white shadow-sm'
+                      ? 'bg-[#C1A173] text-white'
                       : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
                   }`}
                 >

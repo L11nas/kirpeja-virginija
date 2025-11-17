@@ -26,37 +26,28 @@ export default function Hero() {
     <section
       id='hero'
       className='relative h-[75vh] flex items-center justify-center overflow-hidden'
-      aria-label={
-        lang === 'LT'
-          ? 'Kirpyklos įžanginė dalis'
-          : 'Salon introduction section'
-      }
+      aria-label={t[lang].aria}
     >
-      {/* Background image */}
       <img
         src='/img/hero-bg.webp'
-        alt={
-          lang === 'LT'
-            ? 'Kirpyklos įrankiai ant stalo'
-            : 'Hairdresser tools on a table'
-        }
+        alt={t[lang].alt}
         loading='eager'
         decoding='async'
         fetchPriority='high'
         className='absolute inset-0 w-full h-full object-cover hero-animate'
       />
 
-      {/* Subtle light-to-white fade at bottom */}
       <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-white/90' />
 
-      {/* Text content */}
       <div className='relative z-10 text-center px-4'>
         <h1 className='text-4xl md:text-5xl font-serif text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.6)] mb-4 tracking-wide'>
           {t[lang].title}
         </h1>
+
         <p className='text-white/90 text-lg md:text-xl max-w-xl mx-auto leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]'>
           {t[lang].subtitle}
         </p>
+
         <a
           href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
           target='_blank'

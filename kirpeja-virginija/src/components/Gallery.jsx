@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet-async";
-import { useLanguage } from "../context/LanguageContext";
+import { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { useLanguage } from '../context/LanguageContext';
 
 const TOTAL_IMAGES = 34;
-const DIR_THUMBS = "/gallery/thumbs";
-const DIR_FULL = "/gallery/full";
-const EXT = "webp";
+const DIR_THUMBS = '/gallery/thumbs';
+const DIR_FULL = '/gallery/full';
+const EXT = 'webp';
 
 const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => ({
   thumb: `${DIR_THUMBS}/${i + 1}.${EXT}`,
@@ -35,7 +35,7 @@ export default function Gallery() {
     },
   };
 
-  // ESC close listener
+  // ESC close
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && setSelected(null);
     window.addEventListener('keydown', onKey);
@@ -48,10 +48,11 @@ export default function Gallery() {
       className='py-20 bg-[#F8F7F4]'
       aria-labelledby='gallery-heading'
     >
-      {/* --- SEO Head Meta --- */}
+      {/* SEO */}
       <Helmet>
         <title>{`${t[lang].title} | Kirpėja Virginija Kaunas`}</title>
         <meta name='description' content={t[lang].desc} />
+
         <meta
           property='og:title'
           content={`${t[lang].title} | Kirpėja Virginija`}
@@ -62,9 +63,10 @@ export default function Gallery() {
           property='og:locale'
           content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
         />
+
         <link rel='canonical' href='https://kirpeja-virginija.lt/#galerija' />
 
-        {/* Preload pirmoms 3 miniatiūroms */}
+        {/* Preload first thumbs */}
         {images.slice(0, 3).map((img) => (
           <link
             key={img.index}
@@ -75,7 +77,7 @@ export default function Gallery() {
           />
         ))}
 
-        {/* JSON-LD struktūrizuotas turinys */}
+        {/* JSON-LD */}
         <script type='application/ld+json'>
           {JSON.stringify({
             '@context': 'https://schema.org',
@@ -102,12 +104,12 @@ export default function Gallery() {
         </script>
       </Helmet>
 
-      <div className="max-w-6xl mx-auto px-6">
-        <h2 className="text-3xl font-serif text-center mb-10 text-[#3E3B38]">
+      <div className='max-w-6xl mx-auto px-6'>
+        <h2 className='text-3xl font-serif text-center mb-10 text-[#3E3B38]'>
           {t[lang].title}
         </h2>
 
-        {/* --- Paveikslų tinklelis --- */}
+        {/* GRID */}
         <div
           className='grid grid-cols-2 md:grid-cols-3 gap-4'
           role='list'
@@ -131,11 +133,11 @@ export default function Gallery() {
               />
             </button>
           ))}
-        </ul>
+        </div>
 
-        {/* --- Rodyti daugiau --- */}
+        {/* Load more */}
         {visible < images.length && (
-          <div className="text-center mt-10">
+          <div className='text-center mt-10'>
             <button
               onClick={() => setVisible((v) => v + 9)}
               className='px-6 py-2 bg-[#C1A173] hover:bg-[#a88b5f] text-white rounded-md transition'
@@ -146,7 +148,7 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* --- Modal su pilno dydžio nuotrauka --- */}
+      {/* MODAL */}
       {selected && (
         <div
           className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'
