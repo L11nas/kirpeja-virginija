@@ -1,3 +1,4 @@
+import Button from '../components/ui/Button';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 
@@ -203,15 +204,16 @@ export default function Services() {
           ))}
         </div>
 
-        {/* CTA */}
-        <a
+        {/* CTA – Apple style */}
+        <Button
+          as='a'
           href={treatwellUrl}
           target='_blank'
           rel='noopener noreferrer'
-          className='inline-block mt-10 px-8 py-3 bg-[#C1A173] text-white font-medium rounded-md hover:bg-[#a88b5f] transition'
+          className='mt-10 px-8 py-3'
         >
           {lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'}
-        </a>
+        </Button>
       </div>
     </section>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
 
 const TOTAL_IMAGES = 34;
@@ -135,15 +136,15 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* Load more */}
+        {/* APPLE-STYLE "LOAD MORE" BUTTON */}
         {visible < images.length && (
           <div className='text-center mt-10'>
-            <button
+            <Button
               onClick={() => setVisible((v) => v + 9)}
-              className='px-6 py-2 bg-[#C1A173] hover:bg-[#a88b5f] text-white rounded-md transition'
+              className='px-6 py-2'
             >
               {t[lang].more}
-            </button>
+            </Button>
           </div>
         )}
       </div>

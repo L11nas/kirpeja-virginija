@@ -1,4 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
+import Button from '../components/ui/Button';
 
 export default function Hero() {
   const { lang } = useLanguage();
@@ -48,14 +49,15 @@ export default function Hero() {
           {t[lang].subtitle}
         </p>
 
-        <a
+        <Button
+          as='a'
           href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
           target='_blank'
           rel='noopener noreferrer'
-          className='inline-block mt-8 px-10 py-3 bg-[#C1A173] hover:bg-[#a88b5f] text-white font-medium rounded-md transition-all duration-300 shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#C1A173] focus:ring-offset-2'
+          className='mt-8 px-10'
         >
           {t[lang].button}
-        </a>
+        </Button>
       </div>
     </section>
   );

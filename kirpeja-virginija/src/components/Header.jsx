@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import Button from '../components/ui/Button'; // ← Apple-style button
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false); // ← PRIDETA
+  const [hidden, setHidden] = useState(false);
   const { lang, toggleLang } = useLanguage();
 
   const t = {
@@ -28,10 +29,8 @@ export default function Header() {
 
     const onScroll = () => {
       const current = window.scrollY;
-
       setScrolled(current > 20);
-      setHidden(current > lastScrollY && current > 80); // ← DABAR VEIKIA
-
+      setHidden(current > lastScrollY && current > 80);
       lastScrollY = current;
     };
 
@@ -66,37 +65,44 @@ export default function Header() {
           <a href='#paslaugos' className='hover:text-[#C1A173] transition'>
             {t[lang].services}
           </a>
+
           <a href='#galerija' className='hover:text-[#C1A173] transition'>
             {t[lang].gallery}
           </a>
+
           <a href='#kontaktai' className='hover:text-[#C1A173] transition'>
             {t[lang].contact}
           </a>
 
-          {/* Language Switch */}
-          <div className='flex items-center gap-2 border border-[#C1A173] rounded-md overflow-hidden'>
-            {['LT', 'EN'].map((code) => (
-              <button
-                key={code}
-                onClick={toggleLang}
-                className={`px-3 py-1 text-sm transition ${
-                  lang === code
-                    ? 'bg-[#C1A173] text-white'
-                    : 'text-[#C1A173] hover:bg-[#C1A173]/20'
-                }`}
-              >
-                {code}
-              </button>
-            ))}
+          {/* Apple-style Language Switch */}
+          <div className='hidden md:flex items-center'>
+            <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
+              {['LT', 'EN'].map((code) => (
+                <button
+                  key={code}
+                  onClick={toggleLang}
+                  className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
+                    lang === code
+                      ? 'bg-[#C1A173] text-white shadow-sm'
+                      : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
+                  }`}
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
           </div>
 
-          <a
+          {/* Apple-style CTA Button (DESKTOP) */}
+          <Button
+            as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
-            className='bg-[#C1A173] hover:bg-[#a88b5f] text-white px-4 py-2 rounded-md'
+            rel='noopener noreferrer'
+            className='px-5 py-2'
           >
             {t[lang].book}
-          </a>
+          </Button>
         </nav>
 
         {/* Mobile icon */}
@@ -108,10 +114,9 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* MOBILE MENU */}
       {menuOpen && (
         <nav className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'>
-          {/* Manual map for correct translations */}
           <a
             href='#paslaugos'
             className='block hover:text-[#C1A173]'
@@ -136,15 +141,18 @@ export default function Header() {
             {t[lang].contact}
           </a>
 
-          <a
+          {/* Apple-style CTA Button (MOBILE) */}
+          <Button
+            as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
-            className='block bg-[#C1A173] text-white mx-6 py-2 rounded-md'
+            rel='noopener noreferrer'
+            className='mx-auto px-6 py-2'
           >
             {t[lang].book}
-          </a>
+          </Button>
 
-          {/* Mobile Language Switch */}
+          {/* Apple-style Language Switch (Mobile) */}
           <div className='flex justify-center'>
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
