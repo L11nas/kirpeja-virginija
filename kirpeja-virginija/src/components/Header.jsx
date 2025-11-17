@@ -109,6 +109,7 @@ export default function Header() {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className='md:hidden text-[#3E3B38]'
+          aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
         >
           {menuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>

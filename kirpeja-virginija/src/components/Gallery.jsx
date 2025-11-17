@@ -113,7 +113,6 @@ export default function Gallery() {
         {/* GRID */}
         <div
           className='grid grid-cols-2 md:grid-cols-3 gap-4'
-          role='list'
           aria-label={t[lang].title}
         >
           {images.slice(0, visible).map((img) => (

@@ -172,7 +172,6 @@ export default function Services() {
         {/* --- Paslaugų tinklelis --- */}
         <div
           className='grid md:grid-cols-2 gap-6'
-          role='list'
           aria-label={
             lang === 'LT' ? 'Kirpimo paslaugų sąrašas' : 'Service list'
           }
