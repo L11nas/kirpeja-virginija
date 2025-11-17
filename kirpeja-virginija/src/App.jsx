@@ -1,7 +1,7 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import BackToTop from './components/BackToTop';
-
+import { useEffect } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -13,7 +13,15 @@ function AppContent() {
 
   const isLT = lang === 'LT';
   const baseUrl = 'https://kirpeja-virginija.lt';
-
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'page_view', {
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+        page_title: document.title,
+      });
+    }
+  }, []);
   const localBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'HairSalon',

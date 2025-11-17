@@ -31,13 +31,13 @@
       crossorigin
     />
 
-    <!-- ✅ SEO / Social (base layer, React helmet will override dynamically) -->
+    <!-- ✅ SEO / Social -->
     <meta property="og:site_name" content="Kirpėja Virginija" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/img/hero-bg.webp" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- ✅ Fallback structured data (basic local business snippet) -->
+    <!-- ✅ Fallback structured data -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -53,6 +53,24 @@
         "telephone": "+37065460937"
       }
     </script>
+
+    <!-- 🔥🔥🔥 GA4 Tracking (SPA Mode) — Įdėta teisingai prieš </head> -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-5M9C3TTG9Z"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-5M9C3TTG9Z', {
+        send_page_view: false, // SPA režimas, pageview valdysime React'e
+      });
+    </script>
+    <!-- 🔥 GA End -->
   </head>
 
   <body>

@@ -88,7 +88,15 @@ export default function Header() {
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
-                  onClick={toggleLang}
+                  onClick={() => {
+                    if (window.gtag) {
+                      window.gtag('event', 'language_switch', {
+                        event_category: 'engagement',
+                        event_label: `${lang} → ${code}`,
+                      });
+                    }
+                    toggleLang();
+                  }}
                   className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
                     lang === code
                       ? 'bg-[#C1A173] text-white shadow-sm'
@@ -108,6 +116,14 @@ export default function Header() {
             target='_blank'
             rel='noopener noreferrer'
             className='px-5 py-2'
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'booking_click', {
+                  event_category: 'engagement',
+                  event_label: 'Header Desktop CTA',
+                });
+              }
+            }}
           >
             {t[lang].book}
           </Button>
@@ -157,6 +173,14 @@ export default function Header() {
             target='_blank'
             rel='noopener noreferrer'
             className='mx-auto px-6 py-2'
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'booking_click', {
+                  event_category: 'engagement',
+                  event_label: 'Header Mobile CTA',
+                });
+              }
+            }}
           >
             {t[lang].book}
           </Button>
@@ -168,6 +192,12 @@ export default function Header() {
                 <button
                   key={code}
                   onClick={() => {
+                    if (window.gtag) {
+                      window.gtag('event', 'language_switch', {
+                        event_category: 'engagement',
+                        event_label: `${lang} → ${code}`,
+                      });
+                    }
                     toggleLang();
                     setMenuOpen(false);
                   }}

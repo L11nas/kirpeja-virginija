@@ -1,6 +1,7 @@
 import Button from '../components/ui/Button';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
+import { useEffect } from 'react';
 
 export default function Services() {
   const { lang } = useLanguage();
@@ -74,13 +75,37 @@ export default function Services() {
     },
   ];
 
+  // 🔥 SCROLL TRACKING → fiksuoja, kada useris pasiekia paslaugų sekciją
+  useEffect(() => {
+    const onScroll = () => {
+      const section = document.getElementById('paslaugos');
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+
+      // kai sekcija matoma ekrane
+      if (rect.top < window.innerHeight * 0.6) {
+        if (window.gtag) {
+          window.gtag('event', 'scroll_services', {
+            event_category: 'scroll',
+            event_label: 'Reached Services Section',
+          });
+        }
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <section
       id='paslaugos'
       className='py-20 bg-white'
       aria-labelledby='services-heading'
     >
-      {/* --- SEO META --- */}
+      {/* SEO META */}
       <Helmet>
         <title>
           {lang === 'LT'
@@ -98,67 +123,6 @@ export default function Services() {
         />
 
         <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
-
-        {/* Dinaminis OG title pagal kalbą */}
-        <meta
-          property='og:title'
-          content={
-            lang === 'LT'
-              ? 'Kirpėja Virginija – Paslaugos'
-              : 'Hairdresser Virginija – Services'
-          }
-        />
-
-        <meta
-          property='og:description'
-          content={
-            lang === 'LT'
-              ? 'Profesionalios kirpimo ir grožio paslaugos Kaune.'
-              : 'Professional hairdressing and beauty services in Kaunas.'
-          }
-        />
-
-        <meta property='og:type' content='service' />
-        <meta
-          property='og:locale'
-          content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
-        />
-
-        {/* JSON-LD struktūrizuoti duomenys */}
-        <script type='application/ld+json'>
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'LocalBusiness',
-            name: 'Kirpėja Virginija',
-            image: 'https://kirpeja-virginija.lt/img/hero-bg.webp',
-            url: 'https://kirpeja-virginija.lt',
-            address: {
-              '@type': 'PostalAddress',
-              streetAddress: 'Pramonės pr. 15A',
-              addressLocality: 'Kaunas',
-              addressCountry: 'LT',
-            },
-            priceRange: '€13–€40',
-            hasOfferCatalog: {
-              '@type': 'OfferCatalog',
-              name:
-                lang === 'LT'
-                  ? 'Kirpimo ir grožio paslaugos'
-                  : 'Hairdressing and beauty services',
-              itemListElement: services.map((s) => ({
-                '@type': 'Offer',
-                url: treatwellUrl,
-                priceCurrency: 'EUR',
-                price: s.price.replace('€', '').trim(),
-                itemOffered: {
-                  '@type': 'Service',
-                  name: lang === 'LT' ? s.name.lt : s.name.en,
-                  description: lang === 'LT' ? s.desc.lt : s.desc.en,
-                },
-              })),
-            },
-          })}
-        </script>
       </Helmet>
 
       <div className='max-w-5xl mx-auto px-6 text-center'>
@@ -169,7 +133,7 @@ export default function Services() {
           {lang === 'LT' ? 'Teikiamos paslaugos' : 'Available Services'}
         </h2>
 
-        {/* --- Paslaugų tinklelis --- */}
+        {/* Services Grid */}
         <div
           className='grid md:grid-cols-2 gap-6'
           aria-label={
@@ -182,10 +146,20 @@ export default function Services() {
               href={treatwellUrl}
               target='_blank'
               rel='noopener noreferrer'
+              onClick={() => {
+                if (window.gtag) {
+                  window.gtag('event', 'service_click', {
+                    event_category: 'engagement',
+                    event_label: item.id,
+                  });
+
+                  window.gtag('event', 'outbound_treatwell', {
+                    event_category: 'outbound',
+                    event_label: item.id,
+                  });
+                }
+              }}
               className='p-6 border border-[#e5e4e1] rounded-xl hover:shadow-md transition flex justify-between items-start bg-[#F8F7F4] hover:bg-[#f1efeb] text-left'
-              aria-label={`${lang === 'LT' ? item.name.lt : item.name.en} – ${
-                item.price
-              }`}
             >
               <div className='pr-4'>
                 <h3 className='font-medium text-[#3E3B38] text-lg'>
@@ -210,6 +184,18 @@ export default function Services() {
           target='_blank'
           rel='noopener noreferrer'
           className='mt-10 px-8 py-3'
+          onClick={() => {
+            if (window.gtag) {
+              window.gtag('event', 'booking_click', {
+                event_category: 'engagement',
+                event_label: 'Services CTA',
+              });
+              window.gtag('event', 'outbound_treatwell', {
+                event_category: 'outbound',
+                event_label: 'services_cta',
+              });
+            }
+          }}
         >
           {lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'}
         </Button>

@@ -36,12 +36,39 @@ export default function Gallery() {
     },
   };
 
-  // ESC close
+  // 🔥 Track SCROLL → User reached gallery
   useEffect(() => {
-    const onKey = (e) => e.key === 'Escape' && setSelected(null);
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    const onScroll = () => {
+      const section = document.getElementById('galerija');
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+
+      if (rect.top < window.innerHeight * 0.6) {
+        if (window.gtag) {
+          window.gtag('event', 'scroll_gallery', {
+            event_category: 'scroll',
+            event_label: 'Reached Gallery Section',
+          });
+        }
+        window.removeEventListener('scroll', onScroll);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // 🔥 Close image (track)
+  const closeModal = () => {
+    if (window.gtag) {
+      window.gtag('event', 'gallery_close', {
+        event_category: 'engagement',
+        event_label: 'Modal closed',
+      });
+    }
+    setSelected(null);
+  };
 
   return (
     <section
@@ -53,7 +80,6 @@ export default function Gallery() {
       <Helmet>
         <title>{`${t[lang].title} | Kirpėja Virginija Kaunas`}</title>
         <meta name='description' content={t[lang].desc} />
-
         <meta
           property='og:title'
           content={`${t[lang].title} | Kirpėja Virginija`}
@@ -77,32 +103,6 @@ export default function Gallery() {
             imagesrcset={`${img.thumb} 1x, ${img.full} 2x`}
           />
         ))}
-
-        {/* JSON-LD */}
-        <script type='application/ld+json'>
-          {JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'ImageGallery',
-            name:
-              lang === 'LT'
-                ? 'Kirpėja Virginija – darbų galerija'
-                : 'Hairdresser Virginija – hairstyle gallery',
-            description: t[lang].desc,
-            url: 'https://kirpeja-virginija.lt/#galerija',
-            image: images
-              .slice(0, 5)
-              .map((img) => `https://kirpeja-virginija.lt${img.full}`),
-            author: {
-              '@type': 'LocalBusiness',
-              name: 'Kirpėja Virginija',
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Kaunas',
-                addressCountry: 'LT',
-              },
-            },
-          })}
-        </script>
       </Helmet>
 
       <div className='max-w-6xl mx-auto px-6'>
@@ -118,7 +118,16 @@ export default function Gallery() {
           {images.slice(0, visible).map((img) => (
             <button
               key={img.index}
-              onClick={() => setSelected(img.full)}
+              onClick={() => {
+                setSelected(img.full);
+
+                if (window.gtag) {
+                  window.gtag('event', 'gallery_open', {
+                    event_category: 'engagement',
+                    event_label: `photo_${img.index}`,
+                  });
+                }
+              }}
               className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all'
               aria-label={t[lang].alt(img.index)}
             >
@@ -135,11 +144,22 @@ export default function Gallery() {
           ))}
         </div>
 
-        {/* APPLE-STYLE "LOAD MORE" BUTTON */}
+        {/* LOAD MORE */}
         {visible < images.length && (
           <div className='text-center mt-10'>
             <Button
-              onClick={() => setVisible((v) => v + 9)}
+              onClick={() => {
+                setVisible((v) => v + 9);
+
+                if (window.gtag) {
+                  window.gtag('event', 'gallery_load_more', {
+                    event_category: 'engagement',
+                    event_label: `Load more pressed (now visible ${
+                      visible + 9
+                    })`,
+                  });
+                }
+              }}
               className='px-6 py-2'
             >
               {t[lang].more}
@@ -152,7 +172,7 @@ export default function Gallery() {
       {selected && (
         <div
           className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'
-          onClick={() => setSelected(null)}
+          onClick={closeModal}
           aria-label={
             lang === 'LT' ? 'Pilno dydžio nuotrauka' : 'Full size photo'
           }

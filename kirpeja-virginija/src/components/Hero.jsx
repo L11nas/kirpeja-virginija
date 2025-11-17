@@ -1,9 +1,16 @@
 import { useLanguage } from '../context/LanguageContext';
 import Button from '../components/ui/Button';
-
+import { useEffect } from 'react';
 export default function Hero() {
   const { lang } = useLanguage();
-
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('event', 'view_hero', {
+        event_category: 'section_view',
+        event_label: 'Hero section viewed',
+      });
+    }
+  }, []);
   const t = {
     LT: {
       title: 'Kai kirpimas tampa ritualu',
@@ -55,6 +62,14 @@ export default function Hero() {
           target='_blank'
           rel='noopener noreferrer'
           className='mt-8 px-10'
+          onClick={() => {
+            if (window.gtag) {
+              window.gtag('event', 'booking_click', {
+                event_category: 'engagement',
+                event_label: 'Hero CTA',
+              });
+            }
+          }}
         >
           {t[lang].button}
         </Button>
