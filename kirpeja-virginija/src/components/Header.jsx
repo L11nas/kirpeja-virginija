@@ -52,7 +52,15 @@ export default function Header() {
         {/* Logo */}
         <a
           href='#hero'
+          onClick={(e) => {
+            e.preventDefault();
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            });
+          }}
           className='flex items-center gap-2 hover:opacity-90 transition'
+          aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
         >
           <h1 className='leading-tight font-serif text-[#3E3B38]'>
             <span className='block text-lg'>Kirpėja</span>

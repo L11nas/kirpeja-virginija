@@ -1,5 +1,6 @@
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import BackToTop from './components/BackToTop';
 
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -113,6 +114,7 @@ function AppContent() {
       </main>
 
       <Footer />
+      <BackToTop />
     </div>
   );
 }
