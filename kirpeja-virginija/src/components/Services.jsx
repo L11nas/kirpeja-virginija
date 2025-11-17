@@ -1,51 +1,75 @@
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
-import Button from '../components/ui/Button';
 
 export default function Services() {
   const { lang } = useLanguage();
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
+  // --- Paslaugos: SEO-friendly struktūra ---
   const services = [
     {
-      lt: 'Vyriškas kirpimas – klasikinis arba modernus stilius pagal kliento pageidavimus.',
-      en: 'Men’s haircut – classic or modern style tailored to client preferences.',
-      price: '13 €',
+      id: 'mens-haircut',
       name: { lt: 'Vyriškas kirpimas', en: 'Men’s haircut' },
+      desc: {
+        lt: 'Klasikinis arba modernus stilius pagal kliento pageidavimus.',
+        en: 'Classic or modern style tailored to client preferences.',
+      },
+      price: '13 €',
     },
     {
-      lt: 'Plaukų kirpimas ir barzdos modeliavimas – pilnas vyriškas įvaizdis.',
-      en: 'Haircut & beard styling – complete grooming service for men.',
-      price: '17 €',
+      id: 'haircut-beard',
       name: {
         lt: 'Plaukų kirpimas ir barzdos modeliavimas',
         en: 'Haircut & beard styling',
       },
+      desc: {
+        lt: 'Pilnas vyriškas įvaizdis su kruopščiu modeliavimu.',
+        en: 'Complete grooming service with precise beard shaping.',
+      },
+      price: '17 €',
     },
     {
-      lt: 'Moterų kirpimas – nuo klasikinių iki šiuolaikinių kirpimų.',
-      en: 'Women’s haircut – from timeless classics to modern shapes.',
-      price: '15 €',
+      id: 'women-haircut',
       name: { lt: 'Moterų kirpimas', en: 'Women’s haircut' },
+      desc: {
+        lt: 'Nuo klasikinių iki šiuolaikinių kirpimų, atsižvelgiant į plaukų tipą.',
+        en: 'From classic to modern haircuts tailored to hair type.',
+      },
+      price: '15 €',
     },
     {
-      lt: 'Vaikų kirpimas – greitai, švelniai ir su šypsena.',
-      en: 'Children’s haircut – gentle and quick haircut for kids.',
-      price: '13 €',
+      id: 'kids-haircut',
       name: { lt: 'Vaikų kirpimas', en: 'Children’s haircut' },
+      desc: {
+        lt: 'Greitai, švelniai ir su šypsena mažiesiems klientams.',
+        en: 'Quick and gentle haircut for kids.',
+      },
+      price: '13 €',
     },
     {
-      lt: 'Plaukų pynimas su pluoštu – kūrybiškas ir išraiškingas stilius.',
-      en: 'Braiding with fiber – creative and expressive hairstyle.',
+      id: 'braiding',
+      name: {
+        lt: 'Plaukų pynimas su pluoštu',
+        en: 'Braiding with fiber',
+      },
+      desc: {
+        lt: 'Kūrybiškas ir ilgaamžis plaukų pynimas naudojant pluoštą.',
+        en: 'Creative and expressive fiber braiding.',
+      },
       price: '20 €',
-      name: { lt: 'Plaukų pynimas su pluoštu', en: 'Braiding with fiber' },
     },
     {
-      lt: 'Cheminis sušukavimas – ilgaamžis plaukų pakėlimas ir forma.',
-      en: 'Chemical styling (perm) – long-lasting curls and volume.',
+      id: 'perm',
+      name: {
+        lt: 'Cheminis sušukavimas',
+        en: 'Chemical styling (perm)',
+      },
+      desc: {
+        lt: 'Ilgaamžiai garbanų formavimo sprendimai.',
+        en: 'Long-lasting curling and volume.',
+      },
       price: '40 €',
-      name: { lt: 'Cheminis sušukavimas', en: 'Chemical styling (perm)' },
     },
   ];
 
@@ -67,20 +91,17 @@ export default function Services() {
           name='description'
           content={
             lang === 'LT'
-              ? 'Kirpėja Virginija teikia vyriškus, moteriškus ir vaikų kirpimus, barzdos modeliavimą, plaukų dažymą bei pynimus Kaune. Registracija internetu Treatwell platformoje.'
-              : 'Hairdresser Virginija offers men’s, women’s and children’s haircuts, beard styling and braiding in Kaunas. Book online via Treatwell.'
+              ? 'Kirpėja Virginija teikia vyriškus, moteriškus ir vaikų kirpimus, barzdos modeliavimą, plaukų dažymą bei pynimus Kaune. Registruokitės internetu Treatwell platformoje.'
+              : "Hairdresser Virginija offers men's, women's and children's haircuts, beard styling, braiding and more in Kaunas. Book online via Treatwell."
           }
         />
 
         <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
 
-        <meta
-          property='og:title'
-          content='Kirpėja Virginija – paslaugos ir kainos'
-        />
+        <meta property='og:title' content='Kirpėja Virginija – paslaugos' />
         <meta
           property='og:description'
-          content='Profesionalios kirpimo paslaugos Kaune – vyriški, moteriški, vaikų kirpimai ir barzdos modeliavimas.'
+          content='Profesionalios kirpimo ir grožio paslaugos Kaune.'
         />
         <meta property='og:type' content='service' />
         <meta
@@ -88,25 +109,21 @@ export default function Services() {
           content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
         />
 
-        {/* JSON-LD struktūrizuotas duomenų objektas */}
+        {/* JSON-LD struktūrizuoti duomenys */}
         <script type='application/ld+json'>
           {JSON.stringify({
             '@context': 'https://schema.org',
-            '@type': 'Service',
-            serviceType:
-              lang === 'LT'
-                ? 'Kirpimo paslaugos Kaune'
-                : 'Hairdressing services in Kaunas',
-            provider: {
-              '@type': 'LocalBusiness',
-              name: 'Kirpėja Virginija',
-              url: 'https://kirpeja-virginija.lt',
-              address: {
-                '@type': 'PostalAddress',
-                addressLocality: 'Kaunas',
-                addressCountry: 'LT',
-              },
+            '@type': 'LocalBusiness',
+            name: 'Kirpėja Virginija',
+            image: 'https://kirpeja-virginija.lt/img/hero-bg.webp',
+            url: 'https://kirpeja-virginija.lt',
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: 'Pramonės pr. 15A',
+              addressLocality: 'Kaunas',
+              addressCountry: 'LT',
             },
+            priceRange: '€€',
             hasOfferCatalog: {
               '@type': 'OfferCatalog',
               name:
@@ -115,14 +132,14 @@ export default function Services() {
                   : 'Hairdressing and beauty services',
               itemListElement: services.map((s) => ({
                 '@type': 'Offer',
+                url: treatwellUrl,
+                priceCurrency: 'EUR',
+                price: s.price.replace('€', '').trim(),
                 itemOffered: {
                   '@type': 'Service',
                   name: lang === 'LT' ? s.name.lt : s.name.en,
-                  description: lang === 'LT' ? s.lt : s.en,
+                  description: lang === 'LT' ? s.desc.lt : s.desc.en,
                 },
-                price: s.price.replace('€', ''),
-                priceCurrency: 'EUR',
-                url: treatwellUrl,
               })),
             },
           })}
@@ -130,7 +147,6 @@ export default function Services() {
       </Helmet>
 
       <div className='max-w-5xl mx-auto px-6 text-center'>
-        {/* Heading with ID for accessibility */}
         <h2
           id='services-heading'
           className='text-3xl font-serif mb-10 text-[#3E3B38]'
@@ -141,44 +157,46 @@ export default function Services() {
         {/* --- Paslaugų tinklelis --- */}
         <div
           className='grid md:grid-cols-2 gap-6'
-          aria-label={lang === 'LT' ? 'Kirpimo paslaugos' : 'Hair services'}
+          role='list'
+          aria-label={
+            lang === 'LT' ? 'Kirpimo paslaugų sąrašas' : 'Service list'
+          }
         >
-          {services.map((item, i) => (
+          {services.map((item) => (
             <a
-              key={i}
+              key={item.id}
               href={treatwellUrl}
               target='_blank'
-              rel='noreferrer'
+              rel='noopener noreferrer'
               className='p-6 border border-[#e5e4e1] rounded-xl hover:shadow-md transition flex justify-between items-start bg-[#F8F7F4] hover:bg-[#f1efeb] text-left'
               aria-label={`${lang === 'LT' ? item.name.lt : item.name.en} – ${
                 item.price
               }`}
             >
-              <div>
-                <h3 className='font-medium text-[#3E3B38]'>
+              <div className='pr-4'>
+                <h3 className='font-medium text-[#3E3B38] text-lg'>
                   {lang === 'LT' ? item.name.lt : item.name.en}
                 </h3>
                 <p className='text-sm text-[#6B6966] mt-1 leading-snug'>
-                  {lang === 'LT' ? item.lt : item.en}
+                  {lang === 'LT' ? item.desc.lt : item.desc.en}
                 </p>
               </div>
-
-              {/* Improved contrast */}
-              <span className='font-semibold text-[#A1845F] text-lg whitespace-nowrap'>
+              <span className='font-semibold text-[#C1A173] text-lg whitespace-nowrap'>
                 {item.price}
               </span>
             </a>
           ))}
         </div>
 
-        {/* CTA */}
-        <Button
+        {/* --- CTA Mygtukas --- */}
+        <a
           href={treatwellUrl}
-          label={
-            lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'
-          }
-          className='mt-10'
-        />
+          target='_blank'
+          rel='noopener noreferrer'
+          className='inline-block mt-10 px-8 py-3 bg-[#C1A173] text-white font-medium rounded-md hover:bg-[#a88b5f] transition'
+        >
+          {lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'}
+        </a>
       </div>
     </section>
   );
