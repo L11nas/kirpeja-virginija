@@ -52,9 +52,6 @@ function AppContent() {
   return (
     <div className='bg-[#F8F7F4] text-[#2E2B29] font-sans'>
       <Helmet>
-        {/* Correct HTML lang */}
-        <html lang={isLT ? 'lt' : 'en'} />
-
         {/* Canonical */}
         <link rel='canonical' href={baseUrl} />
         <meta name='robots' content='index, follow' />
