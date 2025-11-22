@@ -17,7 +17,7 @@ export default function Services() {
         lt: 'Klasikinis arba modernus stilius pagal kliento pageidavimus.',
         en: 'Classic or modern style tailored to client preferences.',
       },
-      price: '13 €',
+      price: '14 €',
     },
     {
       id: 'haircut-beard',
@@ -29,7 +29,7 @@ export default function Services() {
         lt: 'Pilnas vyriškas įvaizdis su kruopščiu modeliavimu.',
         en: 'Complete grooming service with precise beard shaping.',
       },
-      price: '17 €',
+      price: '20 €',
     },
     {
       id: 'women-haircut',
@@ -47,7 +47,7 @@ export default function Services() {
         lt: 'Greitai, švelniai ir su šypsena mažiesiems klientams.',
         en: 'Quick and gentle haircut for kids.',
       },
-      price: '13 €',
+      price: '15 €',
     },
     {
       id: 'braiding',
