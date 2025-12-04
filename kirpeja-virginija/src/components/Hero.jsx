@@ -13,7 +13,7 @@ export default function Hero() {
   }, []);
   const t = {
     LT: {
-      title: 'Kai kirpimas tampa ritualu',
+      title: 'Jauki aplinka. Profesionalus dėmesys. Tobulas rezultatas.',
       subtitle:
         'Jaukioje aplinkoje skiriamas laikas ne tik kirpimui, bet ir poilsiui. Dėmesys detalėms, švara ir pagarba kiekvienam klientui.',
       button: 'Rezervuok laiką',
@@ -21,7 +21,7 @@ export default function Hero() {
       aria: 'Kirpyklos įžanginė skiltis su foniniu darbo įrankių paveikslu',
     },
     EN: {
-      title: 'When a haircut becomes a ritual',
+      title: 'Cozy environment. Professional attention. Perfect result.',
       subtitle:
         'In a cozy atmosphere, time is devoted not only to haircuts but also to relaxation. Attention to detail, cleanliness and respect for every client.',
       button: 'Book an appointment',
