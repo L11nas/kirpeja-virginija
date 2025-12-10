@@ -7,12 +7,12 @@
 
 /* HERO background animation */
 .hero-animate {
-  animation: zoomIn 6s ease-in-out infinite alternate,
+  animation: heroZoom 6s ease-in-out infinite alternate,
     subtleLight 10s ease-in-out infinite alternate;
 }
 
-/* Zoom-in movement */
-@keyframes zoomIn {
+/* Hero smooth zoom */
+@keyframes heroZoom {
   0% {
     transform: scale(1);
   }
@@ -30,6 +30,8 @@
     filter: brightness(1.05);
   }
 }
+
+/* Modal fade-in */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -39,7 +41,8 @@
   }
 }
 
-@keyframes zoomIn {
+/* Modal zoom-in */
+@keyframes modalZoom {
   from {
     opacity: 0;
     transform: scale(0.95);
@@ -55,5 +58,5 @@
 }
 
 .animate-zoomIn {
-  animation: zoomIn 0.25s ease-out;
+  animation: modalZoom 0.25s ease-out;
 }
