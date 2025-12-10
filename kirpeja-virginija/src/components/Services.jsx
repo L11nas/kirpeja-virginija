@@ -128,7 +128,7 @@ export default function Services() {
           name='description'
           content={
             lang === 'LT'
-              ? 'Kirpėja Virginija Kaune (Dainava) teikia moterų, vyrų ir vaikų kirpimo, bangavimo, barzdos modeliavimo, pynimų ir cheminio sušukavimo paslaugas. Patogus registravimas internetu per Treatwell.'
+              ? 'Kirpėja Virginija Kaune (Gričiupis) teikia moterų, vyrų ir vaikų kirpimo, bangavimo, barzdos modeliavimo, pynimų ir cheminio sušukavimo paslaugas. Patogus registravimas internetu per Treatwell.'
               : 'Hairdresser Virginija in Kaunas offers women’s, men’s and children’s haircuts, express styling, braiding, beard grooming and perms. Easy online booking via Treatwell.'
           }
         />
@@ -146,8 +146,8 @@ export default function Services() {
 
         <p className='max-w-2xl mx-auto text-sm md:text-base text-[#6B6966] mb-10'>
           {lang === 'LT'
-            ? 'Paslaugos atliekamos jaukioje aplinkoje Dainavos mikrorajone, lengvai pasiekiamoje iš Petrašiūnų, Šančių, Eigulių ir Žaliakalnio. Rinkitės paslaugą ir registruokitės internetu.'
-            : 'Services are provided in a cosy salon in Kaunas (Dainava district), easily reachable from nearby areas. Choose a service and book your visit online.'}
+            ? 'Paslaugos atliekamos jaukioje aplinkoje Gričiupio mikrorajone, lengvai pasiekiamoje iš Dainavos, Petrašiūnų, Šančių, Eigulių ir Žaliakalnio. Rinkitės paslaugą ir registruokitės internetu.'
+            : 'Services are provided in a cosy salon in Kaunas (Gričiupis district), easily reachable from nearby areas. Choose a service and book your visit online.'}
         </p>
 
         {/* Services Grid */}
