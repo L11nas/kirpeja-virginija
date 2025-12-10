@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
@@ -17,7 +17,8 @@ const images = Array.from({ length: TOTAL_IMAGES }, (_, i) => ({
 export default function Gallery() {
   const { lang } = useLanguage();
   const [visible, setVisible] = useState(12);
-  const [selected, setSelected] = useState(null);
+  const [selectedIndex, setSelectedIndex] = useState(null); // now storing index
+  const touchStartRef = useRef(0);
 
   const t = {
     LT: {
@@ -26,6 +27,7 @@ export default function Gallery() {
       alt: (i) =>
         `Kirpėja Virginija – nuotrauka ${i}, kirpimas ir šukuosenos Kaune`,
       more: 'Rodyti daugiau',
+      close: 'Uždaryti',
     },
     EN: {
       title: 'Gallery',
@@ -33,17 +35,19 @@ export default function Gallery() {
       alt: (i) =>
         `Hairdresser Virginija – photo ${i}, professional hairstyles in Kaunas`,
       more: 'Show more',
+      close: 'Close',
     },
   };
 
-  // 🔥 Track SCROLL → User reached gallery
+  const selected = selectedIndex !== null ? images[selectedIndex].full : null;
+
+  // TRACK SCROLL
   useEffect(() => {
     const onScroll = () => {
       const section = document.getElementById('galerija');
       if (!section) return;
 
       const rect = section.getBoundingClientRect();
-
       if (rect.top < window.innerHeight * 0.6) {
         if (window.gtag) {
           window.gtag('event', 'scroll_gallery', {
@@ -59,7 +63,7 @@ export default function Gallery() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // 🔥 Close image (track)
+  // CLOSE MODAL
   const closeModal = () => {
     if (window.gtag) {
       window.gtag('event', 'gallery_close', {
@@ -67,8 +71,31 @@ export default function Gallery() {
         event_label: 'Modal closed',
       });
     }
-    setSelected(null);
+    setSelectedIndex(null);
   };
+
+  // NEXT + PREV
+  const showNext = () => {
+    setSelectedIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const showPrev = () => {
+    setSelectedIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  // KEYBOARD CONTROLS
+  useEffect(() => {
+    if (selectedIndex === null) return;
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    };
+
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selectedIndex]);
 
   return (
     <section
@@ -93,7 +120,6 @@ export default function Gallery() {
 
         <link rel='canonical' href='https://kirpeja-virginija.lt/#galerija' />
 
-        {/* Preload first thumbs */}
         {images.slice(0, 3).map((img) => (
           <link
             key={img.index}
@@ -110,16 +136,13 @@ export default function Gallery() {
           {t[lang].title}
         </h2>
 
-        {/* GRID */}
-        <div
-          className='grid grid-cols-2 md:grid-cols-3 gap-4'
-          aria-label={t[lang].title}
-        >
-          {images.slice(0, visible).map((img) => (
+        {/* GALLERY GRID */}
+        <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+          {images.slice(0, visible).map((img, i) => (
             <button
               key={img.index}
               onClick={() => {
-                setSelected(img.full);
+                setSelectedIndex(i);
 
                 if (window.gtag) {
                   window.gtag('event', 'gallery_open', {
@@ -169,23 +192,76 @@ export default function Gallery() {
       </div>
 
       {/* MODAL */}
-      {selected && (
+      {selectedIndex !== null && (
         <div
-          className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm'
+          className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm animate-fadeIn'
           onClick={closeModal}
-          aria-label={
-            lang === 'LT' ? 'Pilno dydžio nuotrauka' : 'Full size photo'
-          }
         >
+          {/* CLOSE BUTTON */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              closeModal();
+            }}
+            className='absolute top-6 right-6 text-white bg-black/50 hover:bg-black/70 backdrop-blur-md px-4 py-2 rounded-full text-xl font-semibold z-50 transition'
+          >
+            ✕
+          </button>
+
+          {/* PREV BUTTON (hidden on small screens) */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              showPrev();
+            }}
+            className='hidden sm:flex absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full p-3 z-50 transition select-none'
+            aria-label='Previous'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='32'
+              height='32'
+              fill='white'
+              viewBox='0 0 24 24'
+            >
+              <path d='M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z' />
+            </svg>
+          </button>
+
+          {/* NEXT BUTTON (hidden on small screens) */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              showNext();
+            }}
+            className='hidden sm:flex absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 rounded-full p-3 z-50 transition select-none'
+            aria-label='Next'
+          >
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              width='32'
+              height='32'
+              fill='white'
+              viewBox='0 0 24 24'
+            >
+              <path d='M8.59 16.59 10 18l6-6-6-6-1.41 1.41L13.17 12z' />
+            </svg>
+          </button>
+
+          {/* IMAGE + MOBILE SWIPE */}
           <img
             src={selected}
-            alt={
-              lang === 'LT'
-                ? 'Kirpyklos darbo nuotrauka'
-                : 'Hair salon work photo'
-            }
-            className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10'
+            alt='Full size'
+            className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10 animate-zoomIn'
             loading='eager'
+            onClick={(e) => e.stopPropagation()}
+            onTouchStart={(e) => (touchStartRef.current = e.touches[0].clientX)}
+            onTouchEnd={(e) => {
+              const endX = e.changedTouches[0].clientX;
+              const diff = endX - touchStartRef.current;
+              if (diff > 50) showPrev();
+              if (diff < -50) showNext();
+            }}
           />
         </div>
       )}
