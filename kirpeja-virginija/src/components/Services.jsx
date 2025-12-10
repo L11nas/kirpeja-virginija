@@ -1,21 +1,30 @@
-import Button from '../components/ui/Button';
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
 import { useEffect } from 'react';
+import Button from '../components/ui/Button';
 
 export default function Services() {
   const { lang } = useLanguage();
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
-  // --- Paslaugos ---
+  // --- OPTIMIZED SERVICES LIST ---
   const services = [
+    {
+      id: 'women-haircut',
+      name: { lt: 'Moterų kirpimas', en: "Women's haircut" },
+      desc: {
+        lt: 'Individualus kirpimas ir formavimas pagal veido bruožus, plaukų tipą ir gyvenimo būdą.',
+        en: 'Personalised haircut and styling based on face shape, hair type and lifestyle.',
+      },
+      price: '15 €',
+    },
     {
       id: 'mens-haircut',
       name: { lt: 'Vyriškas kirpimas', en: 'Men’s haircut' },
       desc: {
-        lt: 'Klasikinis arba modernus stilius pagal kliento pageidavimus.',
-        en: 'Classic or modern style tailored to client preferences.',
+        lt: 'Tvarkingas kasdienis arba modernesnis kirpimas, pritaikytas Jūsų stiliui.',
+        en: 'Clean everyday or more modern cut tailored to your style.',
       },
       price: '14 €',
     },
@@ -26,28 +35,31 @@ export default function Services() {
         en: 'Haircut & beard styling',
       },
       desc: {
-        lt: 'Pilnas vyriškas įvaizdis su kruopščiu modeliavimu.',
-        en: 'Complete grooming service with precise beard shaping.',
+        lt: 'Pilnas vyriškas įvaizdis: kirpimas, kontūrai ir kruopštus barzdos formavimas.',
+        en: 'Complete men’s look with haircut, contours and precise beard shaping.',
       },
       price: '20 €',
-    },
-    {
-      id: 'women-haircut',
-      name: { lt: 'Moterų kirpimas', en: 'Women’s haircut' },
-      desc: {
-        lt: 'Nuo klasikinių iki šiuolaikinių kirpimų, atsižvelgiant į plaukų tipą.',
-        en: 'From classic to modern haircuts tailored to hair type.',
-      },
-      price: '15 €',
     },
     {
       id: 'kids-haircut',
       name: { lt: 'Vaikų kirpimas', en: 'Children’s haircut' },
       desc: {
-        lt: 'Greitai, švelniai ir su šypsena mažiesiems klientams.',
-        en: 'Quick and gentle haircut for kids.',
+        lt: 'Švelnus ir greitas kirpimas mažiesiems, kad vizitas būtų kuo malonesnis.',
+        en: 'Gentle and quick haircut for kids to keep the visit pleasant.',
       },
       price: '15 €',
+    },
+    {
+      id: 'express-styling',
+      name: {
+        lt: 'Express bangavimas / šukuosena',
+        en: 'Express styling / waves',
+      },
+      desc: {
+        lt: 'Greita, elegantiška šukuosena arba bangavimas šventei ar ypatingai progai.',
+        en: 'Quick and elegant styling or waves for special occasions.',
+      },
+      price: 'nuo 25 €',
     },
     {
       id: 'braiding',
@@ -56,8 +68,8 @@ export default function Services() {
         en: 'Braiding with fiber',
       },
       desc: {
-        lt: 'Kūrybiškas ir ilgaamžis plaukų pynimas naudojant pluoštą.',
-        en: 'Creative and expressive fiber braiding.',
+        lt: 'Ilgai išliekantys kūrybiški pynimai, naudojant kokybišką pluoštą.',
+        en: 'Long-lasting, creative braids using quality fiber.',
       },
       price: '20 €',
     },
@@ -65,11 +77,11 @@ export default function Services() {
       id: 'perm',
       name: {
         lt: 'Cheminis sušukavimas',
-        en: 'Chemical styling (perm)',
+        en: 'Perm (chemical styling)',
       },
       desc: {
-        lt: 'Ilgaamžiai garbanų formavimo sprendimai.',
-        en: 'Long-lasting curling and volume.',
+        lt: 'Ilgalaikis garbanų ir apimties formavimas tiesiems ar ploniems plaukams.',
+        en: 'Long-lasting curls and volume for straight or fine hair.',
       },
       price: '40 €',
     },
@@ -83,7 +95,6 @@ export default function Services() {
 
       const rect = section.getBoundingClientRect();
 
-      // kai sekcija matoma ekrane
       if (rect.top < window.innerHeight * 0.6) {
         if (window.gtag) {
           window.gtag('event', 'scroll_services', {
@@ -109,16 +120,16 @@ export default function Services() {
       <Helmet>
         <title>
           {lang === 'LT'
-            ? 'Kirpėja Virginija – Paslaugos ir kainos Kaune'
-            : 'Hairdresser Virginija – Services and Prices in Kaunas'}
+            ? 'Kirpėja Virginija – Kirpimo paslaugos ir kainos Kaune'
+            : 'Hairdresser Virginija – Hair services and prices in Kaunas'}
         </title>
 
         <meta
           name='description'
           content={
             lang === 'LT'
-              ? 'Kirpėja Virginija teikia vyriškus, moteriškus ir vaikų kirpimus, barzdos modeliavimą, plaukų dažymą bei pynimus Kaune. Registruokitės internetu Treatwell platformoje.'
-              : "Hairdresser Virginija offers men's, women's and children's haircuts, beard styling, braiding and more in Kaunas. Book online via Treatwell."
+              ? 'Kirpėja Virginija Kaune (Dainava) teikia moterų, vyrų ir vaikų kirpimo, bangavimo, barzdos modeliavimo, pynimų ir cheminio sušukavimo paslaugas. Patogus registravimas internetu per Treatwell.'
+              : 'Hairdresser Virginija in Kaunas offers women’s, men’s and children’s haircuts, express styling, braiding, beard grooming and perms. Easy online booking via Treatwell.'
           }
         />
 
@@ -130,14 +141,22 @@ export default function Services() {
           id='services-heading'
           className='text-3xl font-serif mb-10 text-[#3E3B38]'
         >
-          {lang === 'LT' ? 'Teikiamos paslaugos' : 'Available Services'}
+          {lang === 'LT' ? 'Teikiamos paslaugos' : 'Available services'}
         </h2>
+
+        <p className='max-w-2xl mx-auto text-sm md:text-base text-[#6B6966] mb-10'>
+          {lang === 'LT'
+            ? 'Paslaugos atliekamos jaukioje aplinkoje Dainavos mikrorajone, lengvai pasiekiamoje iš Petrašiūnų, Šančių, Eigulių ir Žaliakalnio. Rinkitės paslaugą ir registruokitės internetu.'
+            : 'Services are provided in a cosy salon in Kaunas (Dainava district), easily reachable from nearby areas. Choose a service and book your visit online.'}
+        </p>
 
         {/* Services Grid */}
         <div
           className='grid md:grid-cols-2 gap-6'
           aria-label={
-            lang === 'LT' ? 'Kirpimo paslaugų sąrašas' : 'Service list'
+            lang === 'LT'
+              ? 'Kirpimo ir plaukų priežiūros paslaugų sąrašas'
+              : 'List of hair services'
           }
         >
           {services.map((item) => (
@@ -177,7 +196,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* CTA – Apple style */}
+        {/* CTA */}
         <Button
           as='a'
           href={treatwellUrl}
@@ -188,7 +207,7 @@ export default function Services() {
             if (window.gtag) {
               window.gtag('event', 'booking_click', {
                 event_category: 'engagement',
-                event_label: 'Services CTA',
+                event_label: 'services_cta',
               });
               window.gtag('event', 'outbound_treatwell', {
                 event_category: 'outbound',
@@ -197,7 +216,9 @@ export default function Services() {
             }
           }}
         >
-          {lang === 'LT' ? 'Registruokis internetu' : 'Book your visit online'}
+          {lang === 'LT'
+            ? 'Registruok vizitą internetu'
+            : 'Book your visit online'}
         </Button>
       </div>
     </section>

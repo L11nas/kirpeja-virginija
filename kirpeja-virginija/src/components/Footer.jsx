@@ -3,6 +3,7 @@ import { useLanguage } from '../context/LanguageContext';
 
 export default function Footer() {
   const { lang } = useLanguage();
+  const creatorUrl = 'https://www.linkedin.com/in/linas-ulevicius/';
 
   const t = {
     LT: {
@@ -20,7 +21,8 @@ export default function Footer() {
 
       privacy: 'Privatumo politika',
       fb: 'Sekite mus Facebook',
-      rights: 'Svetainę sukūrė Linas Ulevičius.',
+      rights: 'Svetainę sukūrė ',
+      creator: 'Linas Ulevičius',
     },
     EN: {
       brandTop: 'Hairdresser',
@@ -37,7 +39,8 @@ export default function Footer() {
 
       privacy: 'Privacy Policy',
       fb: 'Follow us on Facebook',
-      rights: 'Website created by Linas Ulevičius.',
+      rights: 'Website created by ',
+      creator: 'Linas Ulevičius',
     },
   };
 
@@ -126,20 +129,25 @@ export default function Footer() {
         </div>
 
         {/* Cookies notice */}
-        <p className='text-xs text-[#6C6C6C] max-w-xl mx-auto mt-4 px-4'>
-          {t[lang].cookies}{' '}
-          <a
-            href='https://policies.google.com/privacy'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='underline hover:text-[#BAA774]'
-          >
-            {t[lang].privacy}
-          </a>
-        </p>
-
         <p className='text-sm text-[#6C6C6C] mt-4'>
           © {new Date().getFullYear()} Kirpėja Virginija. {t[lang].rights}
+          <a
+            href={creatorUrl}
+            target='_blank'
+            rel='noopener noreferrer'
+            className='underline hover:text-[#8A744F] transition'
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'creator_click', {
+                  event_category: 'engagement',
+                  event_label: 'footer_creator',
+                });
+              }
+            }}
+          >
+            {t[lang].creator}
+          </a>
+          .
         </p>
       </div>
     </footer>
