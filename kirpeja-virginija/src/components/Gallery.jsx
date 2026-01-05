@@ -91,7 +91,7 @@ export default function Gallery() {
           content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
         />
 
-        <link rel='canonical' href='https://kirpeja-virginija.lt/#galerija' />
+        <link rel='canonical' href='https://kirpeja-virginija.lt/galerija' />
 
         {/* Preload first thumbs */}
         {images.slice(0, 3).map((img) => (
