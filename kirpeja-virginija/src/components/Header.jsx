@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import Button from '../components/ui/Button'; // ← Apple-style button
 import { useLanguage } from '../context/LanguageContext';
 
@@ -15,14 +15,21 @@ export default function Header() {
       gallery: 'Galerija',
       contact: 'Kontaktai',
       book: 'Registruokis',
+      call: 'Skambinti',
+      ariaCall: 'Skambinti kirpėjai Virginijai',
     },
     EN: {
       services: 'Services',
       gallery: 'Gallery',
       contact: 'Contact',
       book: 'Book now',
+      call: 'Call',
+      ariaCall: 'Call Hairdresser Virginija',
     },
   };
+
+  const phoneNumber = '+37065460937';
+  const phoneHref = `tel:${phoneNumber.replace(/\s+/g, '')}`;
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -109,6 +116,24 @@ export default function Header() {
             </div>
           </div>
 
+          {/* Call Button (DESKTOP) */}
+          <Button
+            as='a'
+            href={phoneHref}
+            className='px-5 py-2 bg-transparent border border-[#e5e4e1] text-[#3E3B38] hover:bg-[#F5F3EF]'
+            aria-label={t[lang].ariaCall}
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'click_phone', {
+                  event_category: 'engagement',
+                  event_label: 'Header Desktop Phone',
+                });
+              }
+            }}
+          >
+            {t[lang].call}
+          </Button>
+
           {/* Apple-style CTA Button (DESKTOP) */}
           <Button
             as='a'
@@ -129,14 +154,32 @@ export default function Header() {
           </Button>
         </nav>
 
-        {/* Mobile icon */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className='md:hidden text-[#3E3B38]'
-          aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
-        >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+        {/* Mobile actions: Call + Menu */}
+        <div className='md:hidden flex items-center gap-2'>
+          <a
+            href={phoneHref}
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38] hover:bg-[#F5F3EF] transition'
+            aria-label={t[lang].ariaCall}
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag('event', 'click_phone', {
+                  event_category: 'engagement',
+                  event_label: 'Header Mobile Phone',
+                });
+              }
+            }}
+          >
+            <Phone size={20} strokeWidth={1.8} />
+          </a>
+
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38] hover:bg-[#F5F3EF] transition'
+            aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* MOBILE MENU */}
@@ -180,6 +223,7 @@ export default function Header() {
                   event_label: 'Header Mobile CTA',
                 });
               }
+              setMenuOpen(false);
             }}
           >
             {t[lang].book}
