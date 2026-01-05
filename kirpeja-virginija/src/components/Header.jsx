@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
-import Button from '../components/ui/Button'; // ← Apple-style button
+import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Header() {
@@ -8,6 +8,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const { lang, toggleLang } = useLanguage();
+
+  const phoneNumber = '+37065460937';
+  const phoneHref = `tel:${phoneNumber.replace(/\s+/g, '')}`;
 
   const t = {
     LT: {
@@ -27,9 +30,6 @@ export default function Header() {
       ariaCall: 'Call Hairdresser Virginija',
     },
   };
-
-  const phoneNumber = '+37065460937';
-  const phoneHref = `tel:${phoneNumber.replace(/\s+/g, '')}`;
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -56,15 +56,12 @@ export default function Header() {
       }`}
     >
       <div className='max-w-6xl mx-auto flex justify-between items-center py-3 px-6'>
-        {/* Logo */}
+        {/* LOGO */}
         <a
           href='#hero'
           onClick={(e) => {
             e.preventDefault();
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className='flex items-center gap-2 hover:opacity-90 transition'
           aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
@@ -75,7 +72,7 @@ export default function Header() {
           </h1>
         </a>
 
-        {/* Desktop Navigation */}
+        {/* DESKTOP NAV */}
         <nav className='hidden md:flex items-center gap-6 text-[#3E3B38]'>
           <a href='#paslaugos' className='hover:text-[#C1A173] transition'>
             {t[lang].services}
@@ -89,34 +86,32 @@ export default function Header() {
             {t[lang].contact}
           </a>
 
-          {/* Apple-style Language Switch */}
-          <div className='hidden md:flex items-center'>
-            <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
-              {['LT', 'EN'].map((code) => (
-                <button
-                  key={code}
-                  onClick={() => {
-                    if (window.gtag) {
-                      window.gtag('event', 'language_switch', {
-                        event_category: 'engagement',
-                        event_label: `${lang} → ${code}`,
-                      });
-                    }
-                    toggleLang();
-                  }}
-                  className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
-                    lang === code
-                      ? 'bg-[#C1A173] text-white shadow-sm'
-                      : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
-                  }`}
-                >
-                  {code}
-                </button>
-              ))}
-            </div>
+          {/* LANGUAGE */}
+          <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
+            {['LT', 'EN'].map((code) => (
+              <button
+                key={code}
+                onClick={() => {
+                  if (window.gtag) {
+                    window.gtag('event', 'language_switch', {
+                      event_category: 'engagement',
+                      event_label: `${lang} → ${code}`,
+                    });
+                  }
+                  toggleLang();
+                }}
+                className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
+                  lang === code
+                    ? 'bg-[#C1A173] text-white shadow-sm'
+                    : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
+                }`}
+              >
+                {code}
+              </button>
+            ))}
           </div>
 
-          {/* Call Button (DESKTOP) */}
+          {/* CALL BUTTON (DESKTOP) */}
           <Button
             as='a'
             href={phoneHref}
@@ -134,47 +129,33 @@ export default function Header() {
             {t[lang].call}
           </Button>
 
-          {/* Apple-style CTA Button (DESKTOP) */}
+          {/* BOOKING */}
           <Button
             as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
             rel='noopener noreferrer'
             className='px-5 py-2'
-            onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'booking_click', {
-                  event_category: 'engagement',
-                  event_label: 'Header Desktop CTA',
-                });
-              }
-            }}
           >
             {t[lang].book}
           </Button>
         </nav>
 
-        {/* Mobile actions: Call + Menu */}
+        {/* MOBILE ACTIONS */}
         <div className='md:hidden flex items-center gap-2'>
+          {/* CALL */}
           <a
             href={phoneHref}
-            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38] hover:bg-[#F5F3EF] transition'
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]'
             aria-label={t[lang].ariaCall}
-            onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'click_phone', {
-                  event_category: 'engagement',
-                  event_label: 'Header Mobile Phone',
-                });
-              }
-            }}
           >
             <Phone size={20} strokeWidth={1.8} />
           </a>
 
+          {/* MENU */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38] hover:bg-[#F5F3EF] transition'
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]'
             aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -185,77 +166,25 @@ export default function Header() {
       {/* MOBILE MENU */}
       {menuOpen && (
         <nav className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'>
-          <a
-            href='#paslaugos'
-            className='block hover:text-[#C1A173]'
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href='#paslaugos' onClick={() => setMenuOpen(false)}>
             {t[lang].services}
           </a>
-
-          <a
-            href='#galerija'
-            className='block hover:text-[#C1A173]'
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href='#galerija' onClick={() => setMenuOpen(false)}>
             {t[lang].gallery}
           </a>
-
-          <a
-            href='#kontaktai'
-            className='block hover:text-[#C1A173]'
-            onClick={() => setMenuOpen(false)}
-          >
+          <a href='#kontaktai' onClick={() => setMenuOpen(false)}>
             {t[lang].contact}
           </a>
 
-          {/* Apple-style CTA Button (MOBILE) */}
           <Button
             as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
             target='_blank'
             rel='noopener noreferrer'
             className='mx-auto px-6 py-2'
-            onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'booking_click', {
-                  event_category: 'engagement',
-                  event_label: 'Header Mobile CTA',
-                });
-              }
-              setMenuOpen(false);
-            }}
           >
             {t[lang].book}
           </Button>
-
-          {/* Apple-style Language Switch (Mobile) */}
-          <div className='flex justify-center'>
-            <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
-              {['LT', 'EN'].map((code) => (
-                <button
-                  key={code}
-                  onClick={() => {
-                    if (window.gtag) {
-                      window.gtag('event', 'language_switch', {
-                        event_category: 'engagement',
-                        event_label: `${lang} → ${code}`,
-                      });
-                    }
-                    toggleLang();
-                    setMenuOpen(false);
-                  }}
-                  className={`px-4 py-1 text-sm font-medium rounded-full ${
-                    lang === code
-                      ? 'bg-[#C1A173] text-white'
-                      : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
-                  }`}
-                >
-                  {code}
-                </button>
-              ))}
-            </div>
-          </div>
         </nav>
       )}
     </header>
