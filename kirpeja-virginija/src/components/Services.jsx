@@ -122,7 +122,7 @@ export default function Services() {
           }
         />
 
-        <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
+        <link rel='canonical' href='https://kirpeja-virginija.lt/paslaugos' />
       </Helmet>
 
       <div className='max-w-5xl mx-auto px-6 text-center'>
