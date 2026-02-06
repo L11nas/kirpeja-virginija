@@ -7,6 +7,8 @@ import Hero from './components/Hero';
 import Services from './components/Services';
 import Gallery from './components/Gallery';
 import Footer from './components/Footer';
+import Privacy from './pages/Privacy';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function AppContent() {
   const { lang } = useLanguage();
@@ -113,9 +115,19 @@ function AppContent() {
 
       {/* MAIN LANDMARK (PageSpeed requirement) */}
       <main id='content' role='main'>
-        <Hero />
-        <Services />
-        <Gallery />
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <>
+                <Hero />
+                <Services />
+                <Gallery />
+              </>
+            }
+          />
+          <Route path='/privatumo-politika' element={<Privacy />} />
+        </Routes>
       </main>
 
       <Footer />
@@ -128,7 +140,9 @@ export default function App() {
   return (
     <HelmetProvider>
       <LanguageProvider>
-        <AppContent />
+        <BrowserRouter>
+          <AppContent />
+        </BrowserRouter>
       </LanguageProvider>
     </HelmetProvider>
   );

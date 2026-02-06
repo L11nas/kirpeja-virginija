@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
-import Button from '../components/ui/Button'; // ← Apple-style button
+import { Menu, X, Phone } from 'lucide-react';
+import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+const PHONE_TEL = 'tel:+37065460937'; // <- pakeisk į savo numerį (be tarpų)
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,12 +18,14 @@ export default function Header() {
       gallery: 'Galerija',
       contact: 'Kontaktai',
       book: 'Registruokis',
+      call: 'Skambinti',
     },
     EN: {
       services: 'Services',
       gallery: 'Gallery',
       contact: 'Contact',
       book: 'Book now',
+      call: 'Call',
     },
   };
 
@@ -82,6 +87,22 @@ export default function Header() {
             {t[lang].contact}
           </a>
 
+          {/* Call button (DESKTOP) */}
+          <a
+            href={PHONE_TEL}
+            className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
+            onClick={() => {
+              window.gtag?.('event', 'call_click', {
+                event_category: 'engagement',
+                event_label: 'Header Desktop Call',
+              });
+            }}
+            aria-label={t[lang].call}
+          >
+            <Phone size={18} className='text-[#C1A173]' />
+            <span className='text-sm font-medium'>{t[lang].call}</span>
+          </a>
+
           {/* Apple-style Language Switch */}
           <div className='hidden md:flex items-center'>
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
@@ -117,12 +138,10 @@ export default function Header() {
             rel='noopener noreferrer'
             className='px-5 py-2'
             onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'booking_click', {
-                  event_category: 'engagement',
-                  event_label: 'Header Desktop CTA',
-                });
-              }
+              window.gtag?.('event', 'booking_click', {
+                event_category: 'engagement',
+                event_label: 'Header Desktop CTA',
+              });
             }}
           >
             {t[lang].book}
@@ -166,6 +185,23 @@ export default function Header() {
             {t[lang].contact}
           </a>
 
+          {/* Call button (MOBILE MENU) */}
+          <a
+            href={PHONE_TEL}
+            className='mx-auto inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition'
+            onClick={() => {
+              window.gtag?.('event', 'call_click', {
+                event_category: 'engagement',
+                event_label: 'Header Mobile Menu Call',
+              });
+              setMenuOpen(false);
+            }}
+            aria-label={t[lang].call}
+          >
+            <Phone size={18} className='text-[#C1A173]' />
+            <span className='text-sm font-medium'>{t[lang].call}</span>
+          </a>
+
           {/* Apple-style CTA Button (MOBILE) */}
           <Button
             as='a'
@@ -174,12 +210,11 @@ export default function Header() {
             rel='noopener noreferrer'
             className='mx-auto px-6 py-2'
             onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'booking_click', {
-                  event_category: 'engagement',
-                  event_label: 'Header Mobile CTA',
-                });
-              }
+              window.gtag?.('event', 'booking_click', {
+                event_category: 'engagement',
+                event_label: 'Header Mobile CTA',
+              });
+              setMenuOpen(false);
             }}
           >
             {t[lang].book}
@@ -192,12 +227,10 @@ export default function Header() {
                 <button
                   key={code}
                   onClick={() => {
-                    if (window.gtag) {
-                      window.gtag('event', 'language_switch', {
-                        event_category: 'engagement',
-                        event_label: `${lang} → ${code}`,
-                      });
-                    }
+                    window.gtag?.('event', 'language_switch', {
+                      event_category: 'engagement',
+                      event_label: `${lang} → ${code}`,
+                    });
                     toggleLang();
                     setMenuOpen(false);
                   }}

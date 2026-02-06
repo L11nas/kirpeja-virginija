@@ -17,16 +17,16 @@ export default function Services() {
         lt: 'Individualus kirpimas ir formavimas pagal veido bruožus, plaukų tipą ir gyvenimo būdą.',
         en: 'Personalised haircut and styling based on face shape, hair type and lifestyle.',
       },
-      price: '15 €',
+      price: 'nuo 15 €',
     },
     {
       id: 'mens-haircut',
-      name: { lt: 'Vyriškas kirpimas', en: 'Men’s haircut' },
+      name: { lt: 'Vyrų kirpimas', en: 'Men’s haircut' },
       desc: {
         lt: 'Tvarkingas kasdienis arba modernesnis kirpimas, pritaikytas Jūsų stiliui.',
         en: 'Clean everyday or more modern cut tailored to your style.',
       },
-      price: '14 €',
+      price: '15 €',
     },
     {
       id: 'haircut-beard',
