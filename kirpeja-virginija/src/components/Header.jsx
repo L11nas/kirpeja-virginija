@@ -2,9 +2,8 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
-import { useLocation, useNavigate } from 'react-router-dom';
 
-const PHONE_TEL = 'tel:+37065460937'; // <- pakeisk į savo numerį (be tarpų)
+const PHONE_TEL = 'tel:+37065460937';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -59,10 +58,8 @@ export default function Header() {
           href='#hero'
           onClick={(e) => {
             e.preventDefault();
-            window.scrollTo({
-              top: 0,
-              behavior: 'smooth',
-            });
+            setMenuOpen(false);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className='flex items-center gap-2 hover:opacity-90 transition'
           aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
@@ -103,19 +100,17 @@ export default function Header() {
             <span className='text-sm font-medium'>{t[lang].call}</span>
           </a>
 
-          {/* Apple-style Language Switch */}
+          {/* Language Switch */}
           <div className='hidden md:flex items-center'>
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
                   onClick={() => {
-                    if (window.gtag) {
-                      window.gtag('event', 'language_switch', {
-                        event_category: 'engagement',
-                        event_label: `${lang} → ${code}`,
-                      });
-                    }
+                    window.gtag?.('event', 'language_switch', {
+                      event_category: 'engagement',
+                      event_label: `${lang} → ${code}`,
+                    });
                     toggleLang();
                   }}
                   className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
@@ -130,7 +125,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Apple-style CTA Button (DESKTOP) */}
+          {/* CTA */}
           <Button
             as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
@@ -148,14 +143,33 @@ export default function Header() {
           </Button>
         </nav>
 
-        {/* Mobile icon */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className='md:hidden text-[#3E3B38]'
-          aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
-        >
-          {menuOpen ? <X size={26} /> : <Menu size={26} />}
-        </button>
+        {/* Mobile Actions (Call + Hamburger) */}
+        <div className='md:hidden flex items-center gap-2'>
+          {/* Mobile Call button (VISADA MATOMAS) */}
+          <a
+            href={PHONE_TEL}
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
+            onClick={() => {
+              window.gtag?.('event', 'call_click', {
+                event_category: 'engagement',
+                event_label: 'Header Mobile Top Call',
+              });
+            }}
+            aria-label={t[lang].call}
+            title={t[lang].call}
+          >
+            <Phone size={18} className='text-[#C1A173]' />
+          </a>
+
+          {/* Hamburger */}
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            className='text-[#3E3B38]'
+            aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
+          >
+            {menuOpen ? <X size={26} /> : <Menu size={26} />}
+          </button>
+        </div>
       </div>
 
       {/* MOBILE MENU */}
@@ -185,24 +199,7 @@ export default function Header() {
             {t[lang].contact}
           </a>
 
-          {/* Call button (MOBILE MENU) */}
-          <a
-            href={PHONE_TEL}
-            className='mx-auto inline-flex items-center justify-center gap-2 px-6 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition'
-            onClick={() => {
-              window.gtag?.('event', 'call_click', {
-                event_category: 'engagement',
-                event_label: 'Header Mobile Menu Call',
-              });
-              setMenuOpen(false);
-            }}
-            aria-label={t[lang].call}
-          >
-            <Phone size={18} className='text-[#C1A173]' />
-            <span className='text-sm font-medium'>{t[lang].call}</span>
-          </a>
-
-          {/* Apple-style CTA Button (MOBILE) */}
+          {/* CTA (MOBILE) */}
           <Button
             as='a'
             href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
@@ -220,8 +217,8 @@ export default function Header() {
             {t[lang].book}
           </Button>
 
-          {/* Apple-style Language Switch (Mobile) */}
-          <div className='flex justify-center'>
+          {/* Language Switch (Mobile) */}
+          <div className='flex justify-center pt-2'>
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
