@@ -8,7 +8,8 @@ export default function Services() {
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
-  // --- OPTIMIZED SERVICES LIST ---
+  // --- SERVICES LIST ---
+  // Kaina: { amount: '15 €', from: true } -> LT: "nuo 15 €", EN: "from 15 €"
   const services = [
     {
       id: 'women-haircut',
@@ -17,7 +18,7 @@ export default function Services() {
         lt: 'Individualus kirpimas ir formavimas pagal veido bruožus, plaukų tipą ir gyvenimo būdą.',
         en: 'Personalised haircut and styling based on face shape, hair type and lifestyle.',
       },
-      price: 'nuo 15 €',
+      price: { amount: '15 €', from: true },
     },
     {
       id: 'mens-haircut',
@@ -26,7 +27,7 @@ export default function Services() {
         lt: 'Tvarkingas kasdienis arba modernesnis kirpimas, pritaikytas Jūsų stiliui.',
         en: 'Clean everyday or more modern cut tailored to your style.',
       },
-      price: '15 €',
+      price: { amount: '15 €', from: false },
     },
     {
       id: 'haircut-beard',
@@ -38,7 +39,7 @@ export default function Services() {
         lt: 'Pilnas vyriškas įvaizdis: kirpimas, kontūrai ir kruopštus barzdos formavimas.',
         en: 'Complete men’s look with haircut, contours and precise beard shaping.',
       },
-      price: '20 €',
+      price: { amount: '20 €', from: false },
     },
     {
       id: 'kids-haircut',
@@ -47,7 +48,7 @@ export default function Services() {
         lt: 'Švelnus ir greitas kirpimas mažiesiems, kad vizitas būtų kuo malonesnis.',
         en: 'Gentle and quick haircut for kids to keep the visit pleasant.',
       },
-      price: '15 €',
+      price: { amount: '15 €', from: false },
     },
     {
       id: 'express-styling',
@@ -59,7 +60,7 @@ export default function Services() {
         lt: 'Greita, elegantiška šukuosena arba bangavimas šventei ar ypatingai progai.',
         en: 'Quick and elegant styling or waves for special occasions.',
       },
-      price: 'nuo 25 €',
+      price: { amount: '25 €', from: true },
     },
     {
       id: 'braiding',
@@ -71,7 +72,7 @@ export default function Services() {
         lt: 'Ilgai išliekantys kūrybiški pynimai, naudojant kokybišką pluoštą.',
         en: 'Long-lasting, creative braids using quality fiber.',
       },
-      price: '20 €',
+      price: { amount: '20 €', from: false },
     },
     {
       id: 'perm',
@@ -83,11 +84,18 @@ export default function Services() {
         lt: 'Ilgalaikis garbanų ir apimties formavimas tiesiems ar ploniems plaukams.',
         en: 'Long-lasting curls and volume for straight or fine hair.',
       },
-      price: '40 €',
+      price: { amount: '40 €', from: false },
     },
   ];
 
-  // 🔥 SCROLL TRACKING → fiksuoja, kada useris pasiekia paslaugų sekciją
+  const formatPrice = (price) => {
+    if (!price) return '';
+    if (typeof price === 'string') return price; // jei kažkur liktų senas formatas
+    const prefix = price.from ? (lang === 'LT' ? 'nuo ' : 'from ') : '';
+    return `${prefix}${price.amount}`;
+  };
+
+  // SCROLL TRACKING → fiksuoja, kada useris pasiekia paslaugų sekciją
   useEffect(() => {
     const onScroll = () => {
       const section = document.getElementById('paslaugos');
@@ -96,12 +104,10 @@ export default function Services() {
       const rect = section.getBoundingClientRect();
 
       if (rect.top < window.innerHeight * 0.6) {
-        if (window.gtag) {
-          window.gtag('event', 'scroll_services', {
-            event_category: 'scroll',
-            event_label: 'Reached Services Section',
-          });
-        }
+        window.gtag?.('event', 'scroll_services', {
+          event_category: 'scroll',
+          event_label: 'Reached Services Section',
+        });
         window.removeEventListener('scroll', onScroll);
       }
     };
@@ -166,17 +172,15 @@ export default function Services() {
               target='_blank'
               rel='noopener noreferrer'
               onClick={() => {
-                if (window.gtag) {
-                  window.gtag('event', 'service_click', {
-                    event_category: 'engagement',
-                    event_label: item.id,
-                  });
+                window.gtag?.('event', 'service_click', {
+                  event_category: 'engagement',
+                  event_label: item.id,
+                });
 
-                  window.gtag('event', 'outbound_treatwell', {
-                    event_category: 'outbound',
-                    event_label: item.id,
-                  });
-                }
+                window.gtag?.('event', 'outbound_treatwell', {
+                  event_category: 'outbound',
+                  event_label: item.id,
+                });
               }}
               className='p-6 border border-[#e5e4e1] rounded-xl hover:shadow-md transition flex justify-between items-start bg-[#F8F7F4] hover:bg-[#f1efeb] text-left'
             >
@@ -190,7 +194,7 @@ export default function Services() {
               </div>
 
               <span className='font-semibold text-[#C1A173] text-lg whitespace-nowrap'>
-                {item.price}
+                {formatPrice(item.price)}
               </span>
             </a>
           ))}
@@ -204,16 +208,14 @@ export default function Services() {
           rel='noopener noreferrer'
           className='mt-10 px-8 py-3'
           onClick={() => {
-            if (window.gtag) {
-              window.gtag('event', 'booking_click', {
-                event_category: 'engagement',
-                event_label: 'services_cta',
-              });
-              window.gtag('event', 'outbound_treatwell', {
-                event_category: 'outbound',
-                event_label: 'services_cta',
-              });
-            }
+            window.gtag?.('event', 'booking_click', {
+              event_category: 'engagement',
+              event_label: 'services_cta',
+            });
+            window.gtag?.('event', 'outbound_treatwell', {
+              event_category: 'outbound',
+              event_label: 'services_cta',
+            });
           }}
         >
           {lang === 'LT'
