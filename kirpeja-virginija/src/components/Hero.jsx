@@ -36,14 +36,7 @@ export default function Hero() {
       className='relative h-[75vh] flex items-center justify-center overflow-hidden'
       aria-label={t[lang].aria}
     >
-      <img
-        src='/img/hero-bg.webp'
-        alt={t[lang].alt}
-        loading='eager'
-        decoding='async'
-        fetchPriority='high'
-        className='absolute inset-0 w-full h-full object-cover hero-animate'
-      />
+      
 
       <div className='absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-white/90' />
 
