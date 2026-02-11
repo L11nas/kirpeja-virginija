@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
@@ -9,28 +9,44 @@ export default function Header() {
   const [hidden, setHidden] = useState(false);
   const { lang, toggleLang } = useLanguage();
 
+  const mobileNavId = useId();
+
   const phoneNumber = '+37065460937';
   const phoneHref = `tel:${phoneNumber.replace(/\s+/g, '')}`;
+
+  const bookingUrl =
+    'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
   const t = {
     LT: {
       services: 'Paslaugos',
       gallery: 'Galerija',
       contact: 'Kontaktai',
-      book: 'Registruokis',
+      book: 'Rezervuok laiką',
       call: 'Skambinti',
       ariaCall: 'Skambinti kirpėjai Virginijai',
+      ariaMenuOpen: 'Atidaryti meniu',
+      ariaMenuClose: 'Uždaryti meniu',
+      ariaPrimaryNav: 'Pagrindinė navigacija',
+      skip: 'Pereiti prie turinio',
+      brandHome: 'Kirpėja Virginija — į pradžią',
     },
     EN: {
       services: 'Services',
       gallery: 'Gallery',
       contact: 'Contact',
-      book: 'Book now',
+      book: 'Book an appointment',
       call: 'Call',
       ariaCall: 'Call Hairdresser Virginija',
+      ariaMenuOpen: 'Open menu',
+      ariaMenuClose: 'Close menu',
+      ariaPrimaryNav: 'Primary navigation',
+      skip: 'Skip to content',
+      brandHome: 'Hairdresser Virginija — back to top',
     },
   };
 
+  // Scroll behavior (sticky header hide/show)
   useEffect(() => {
     let lastScrollY = window.scrollY;
 
@@ -41,9 +57,50 @@ export default function Header() {
       lastScrollY = current;
     };
 
-    window.addEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Close menu with ESC + lock body scroll
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setMenuOpen(false);
+    };
+
+    if (menuOpen) {
+      document.addEventListener('keydown', onKeyDown);
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [menuOpen]);
+
+  const smoothScrollTo = (hash) => (e) => {
+    e.preventDefault();
+    const el = document.querySelector(hash);
+    setMenuOpen(false);
+
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      // fallback
+      window.location.hash = hash;
+    }
+  };
+
+  const track = (event, label) => {
+    if (window.gtag) {
+      window.gtag('event', event, {
+        event_category: 'engagement',
+        event_label: label,
+      });
+    }
+  };
 
   return (
     <header
@@ -55,49 +112,51 @@ export default function Header() {
           : 'bg-white/90 backdrop-blur-md border-b border-transparent'
       }`}
     >
-      <div className='max-w-6xl mx-auto flex justify-between items-center py-3 px-6'>
-        {/* LOGO */}
+      {/* Skip link (accessibility + UX) */}
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-3 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-lg focus:bg-white focus:shadow"
+      >
+        {t[lang].skip}
+      </a>
+
+      <div className="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+        {/* BRAND (not H1 – H1 should live in Hero) */}
         <a
-          href='#hero'
-          onClick={(e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          className='flex items-center gap-2 hover:opacity-90 transition'
-          aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
+          href="#hero"
+          onClick={smoothScrollTo('#hero')}
+          className="flex items-center gap-2 hover:opacity-90 transition"
+          aria-label={t[lang].brandHome}
         >
-          <h1 className='leading-tight font-serif text-[#3E3B38]'>
-            <span className='block text-lg'>Kirpėja</span>
-            <span className='block -mt-1 text-[#C1A173]'>Virginija</span>
-          </h1>
+          <div className="leading-tight font-serif text-[#3E3B38]">
+            <p className="block text-lg">Kirpėja</p>
+            <p className="block -mt-1 text-[#C1A173]">Virginija</p>
+          </div>
         </a>
 
         {/* DESKTOP NAV */}
-        <nav className='hidden md:flex items-center gap-6 text-[#3E3B38]'>
-          <a href='#paslaugos' className='hover:text-[#C1A173] transition'>
+        <nav
+          className="hidden md:flex items-center gap-6 text-[#3E3B38]"
+          aria-label={t[lang].ariaPrimaryNav}
+        >
+          <a href="#paslaugos" onClick={smoothScrollTo('#paslaugos')} className="hover:text-[#C1A173] transition">
             {t[lang].services}
           </a>
-
-          <a href='#galerija' className='hover:text-[#C1A173] transition'>
+          <a href="#galerija" onClick={smoothScrollTo('#galerija')} className="hover:text-[#C1A173] transition">
             {t[lang].gallery}
           </a>
-
-          <a href='#kontaktai' className='hover:text-[#C1A173] transition'>
+          <a href="#kontaktai" onClick={smoothScrollTo('#kontaktai')} className="hover:text-[#C1A173] transition">
             {t[lang].contact}
           </a>
 
           {/* LANGUAGE */}
-          <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
+          <div className="flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]">
             {['LT', 'EN'].map((code) => (
               <button
                 key={code}
+                type="button"
                 onClick={() => {
-                  if (window.gtag) {
-                    window.gtag('event', 'language_switch', {
-                      event_category: 'engagement',
-                      event_label: `${lang} → ${code}`,
-                    });
-                  }
+                  track('language_switch', `${lang} → ${code}`);
                   toggleLang();
                 }}
                 className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
@@ -105,6 +164,7 @@ export default function Header() {
                     ? 'bg-[#C1A173] text-white shadow-sm'
                     : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
                 }`}
+                aria-pressed={lang === code}
               >
                 {code}
               </button>
@@ -113,50 +173,48 @@ export default function Header() {
 
           {/* CALL BUTTON (DESKTOP) */}
           <Button
-            as='a'
+            as="a"
             href={phoneHref}
-            className='px-5 py-2 bg-transparent border border-[#e5e4e1] text-[#3E3B38] hover:bg-[#F5F3EF]'
+            className="px-5 py-2 bg-transparent border border-[#e5e4e1] text-[#3E3B38] hover:bg-[#F5F3EF]"
             aria-label={t[lang].ariaCall}
-            onClick={() => {
-              if (window.gtag) {
-                window.gtag('event', 'click_phone', {
-                  event_category: 'engagement',
-                  event_label: 'Header Desktop Phone',
-                });
-              }
-            }}
+            onClick={() => track('click_phone', 'Header Desktop Phone')}
           >
             {t[lang].call}
           </Button>
 
-          {/* BOOKING */}
+          {/* BOOKING (PRIMARY CTA) */}
           <Button
-            as='a'
-            href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='px-5 py-2'
+            as="a"
+            href={bookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-5 py-2"
+            onClick={() => track('click_booking', 'Header Desktop Booking')}
           >
             {t[lang].book}
           </Button>
         </nav>
 
         {/* MOBILE ACTIONS */}
-        <div className='md:hidden flex items-center gap-2'>
+        <div className="md:hidden flex items-center gap-2">
           {/* CALL */}
           <a
             href={phoneHref}
-            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]'
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]"
             aria-label={t[lang].ariaCall}
+            onClick={() => track('click_phone', 'Header Mobile Phone')}
           >
             <Phone size={20} strokeWidth={1.8} />
           </a>
 
           {/* MENU */}
           <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className='inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]'
-            aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
+            type="button"
+            onClick={() => setMenuOpen((s) => !s)}
+            className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-[#e5e4e1] bg-white/80 backdrop-blur-md text-[#3E3B38]"
+            aria-label={menuOpen ? t[lang].ariaMenuClose : t[lang].ariaMenuOpen}
+            aria-expanded={menuOpen}
+            aria-controls={mobileNavId}
           >
             {menuOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
@@ -165,26 +223,55 @@ export default function Header() {
 
       {/* MOBILE MENU */}
       {menuOpen && (
-        <nav className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'>
-          <a href='#paslaugos' onClick={() => setMenuOpen(false)}>
+        <nav
+          id={mobileNavId}
+          className="md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3 px-6"
+          aria-label={t[lang].ariaPrimaryNav}
+        >
+          <a href="#paslaugos" onClick={smoothScrollTo('#paslaugos')} className="block py-2">
             {t[lang].services}
           </a>
-          <a href='#galerija' onClick={() => setMenuOpen(false)}>
+          <a href="#galerija" onClick={smoothScrollTo('#galerija')} className="block py-2">
             {t[lang].gallery}
           </a>
-          <a href='#kontaktai' onClick={() => setMenuOpen(false)}>
+          <a href="#kontaktai" onClick={smoothScrollTo('#kontaktai')} className="block py-2">
             {t[lang].contact}
           </a>
 
-          <Button
-            as='a'
-            href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='mx-auto px-6 py-2'
-          >
-            {t[lang].book}
-          </Button>
+          {/* LANGUAGE (mobile) */}
+          <div className="flex justify-center items-center bg-[#F5F3EF] rounded-full px-1 py-[3px] w-fit mx-auto">
+            {['LT', 'EN'].map((code) => (
+              <button
+                key={code}
+                type="button"
+                onClick={() => {
+                  track('language_switch', `${lang} → ${code}`);
+                  toggleLang();
+                }}
+                className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
+                  lang === code
+                    ? 'bg-[#C1A173] text-white shadow-sm'
+                    : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
+                }`}
+                aria-pressed={lang === code}
+              >
+                {code}
+              </button>
+            ))}
+          </div>
+
+          <div className="pt-2">
+            <Button
+              as="a"
+              href={bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-auto px-6 py-2 w-full max-w-xs"
+              onClick={() => track('click_booking', 'Header Mobile Booking')}
+            >
+              {t[lang].book}
+            </Button>
+          </div>
         </nav>
       )}
     </header>
