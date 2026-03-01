@@ -39,7 +39,7 @@ export default function Services() {
         lt: 'Pilnas vyriškas įvaizdis: kirpimas, kontūrai ir kruopštus barzdos formavimas.',
         en: 'Complete men’s look with haircut, contours and precise beard shaping.',
       },
-      price: { amount: '20 €', from: false },
+      price: { amount: '25 €', from: false },
     },
     {
       id: 'kids-haircut',
