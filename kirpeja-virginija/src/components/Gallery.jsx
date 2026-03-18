@@ -6,17 +6,17 @@ import { useLanguage } from '../context/LanguageContext';
 const EXT_IMG = 'webp';
 const EXT_VIDEO = 'mp4';
 const ROOT = '/gallery';
+const SITE_URL = 'https://kirpeja-virginija.lt/';
+const GALLERY_URL = `${SITE_URL}#galerija`;
 
-// Kategorijos (ID turi sutapti su folderių pavadinimais public/gallery/{id}/...)
 const CATEGORY_META = [
   { id: 'all' },
-  { id: 'women', total: 3 }, // <-- pasikeisk
-  { id: 'men', total: 9 }, // <-- pasikeisk
-  { id: 'styling', total: 6 }, // <-- pasikeisk
-  { id: 'kids', total: 17 }, // <-- pasikeisk
+  { id: 'women', total: 3 },
+  { id: 'men', total: 9 },
+  { id: 'styling', total: 6 },
+  { id: 'kids', total: 17 },
 ];
 
-// Video kortelės (poster + mp4)
 const VIDEO_ITEMS = [
   {
     id: 'reel-1',
@@ -61,13 +61,13 @@ export default function Gallery() {
 
   const [activeCat, setActiveCat] = useState('all');
   const [visible, setVisible] = useState(8);
-  const [selectedId, setSelectedId] = useState(null); // item.id
+  const [selectedId, setSelectedId] = useState(null);
   const touchStartRef = useRef(0);
 
   const t = {
     LT: {
-      title: 'Galerija',
-      desc: 'Kirpėja Virginija – darbų galerija, profesionalūs moterų ir vyrų kirpimai, šukuosenos, dažymai Kaune.',
+      title: 'Darbų galerija',
+      desc: 'Kirpėja Virginija Kaune – moterų, vyrų ir vaikų kirpimų, šukuosenų ir plaukų formavimo darbų galerija. Peržiūrėkite atliktus darbus ir registruokitės vizitui internetu.',
       more: 'Rodyti daugiau',
       close: 'Uždaryti',
       prev: 'Ankstesnis',
@@ -82,18 +82,25 @@ export default function Gallery() {
       },
       itemAlt: (cat, idx) => {
         const map = {
-          women: 'Moterų kirpimas',
-          men: 'Vyrų kirpimas',
-          styling: 'Šukuosena / dažymas',
-          kids: 'Vaikų kirpimas',
+          women: 'moterų kirpimas',
+          men: 'vyrų kirpimas',
+          styling: 'šukuosena arba plaukų formavimas',
+          kids: 'vaikų kirpimas',
         };
-        return `Kirpėja Virginija – ${map[cat] ?? 'darbas'} (${idx}) Kaune`;
+        return `Kirpėja Virginija Kaune – ${map[cat] ?? 'kirpėjos darbas'} ${idx}`;
       },
+      videoAlt: (id) => `Kirpėja Virginija Kaune – darbo proceso video ${id}`,
       videoLabel: 'VIDEO',
+      gridAria: 'Kirpėjos darbų galerija',
+      filterAria: 'Galerijos kategorijų pasirinkimas',
+      openPhoto: (cat, idx) => `Atidaryti nuotrauką: ${t.LT.itemAlt(cat, idx)}`,
+      openVideo: (id) => `Atidaryti video ${id}`,
+      modalImageAlt: (cat, idx) =>
+        `Padidinta nuotrauka: ${t.LT.itemAlt(cat, idx)}`,
     },
     EN: {
       title: 'Gallery',
-      desc: 'Hairdresser Virginija – professional haircut & hairstyle gallery in Kaunas, Lithuania.',
+      desc: 'Hairdresser Virginija in Kaunas – gallery of women’s, men’s and children’s haircuts, hairstyles and hair styling work. View completed work and book your appointment online.',
       more: 'Show more',
       close: 'Close',
       prev: 'Previous',
@@ -108,18 +115,23 @@ export default function Gallery() {
       },
       itemAlt: (cat, idx) => {
         const map = {
-          women: "Women's haircut",
-          men: "Men's haircut",
-          styling: 'Styling / color',
-          kids: "Kids' haircut",
+          women: "women's haircut",
+          men: "men's haircut",
+          styling: 'hairstyle or hair styling',
+          kids: "kids' haircut",
         };
-        return `Hairdresser Virginija – ${map[cat] ?? 'work'} (${idx}) in Kaunas`;
+        return `Hairdresser Virginija in Kaunas – ${map[cat] ?? 'hair work'} ${idx}`;
       },
+      videoAlt: (id) => `Hairdresser Virginija in Kaunas – process video ${id}`,
       videoLabel: 'VIDEO',
+      gridAria: 'Hairdresser work gallery',
+      filterAria: 'Gallery category selection',
+      openPhoto: (cat, idx) => `Open photo: ${t.EN.itemAlt(cat, idx)}`,
+      openVideo: (id) => `Open video ${id}`,
+      modalImageAlt: (cat, idx) => `Large image: ${t.EN.itemAlt(cat, idx)}`,
     },
   };
 
-  // Visi itemai: foto + video
   const allItems = useMemo(() => {
     const imgs = buildImageItems();
     const vids = VIDEO_ITEMS.map((v) => ({
@@ -130,13 +142,11 @@ export default function Gallery() {
       src: v.src,
       titleKey: v.titleKey,
     }));
-    // gali keisti eiliškumą: pvz. video pradžioje
     return [...imgs, ...vids];
   }, []);
 
-  // Skaičiukai prie kategorijų
   const counts = useMemo(() => {
-    const base = {
+    return {
       all: allItems.length,
       women: allItems.filter((x) => x.category === 'women').length,
       men: allItems.filter((x) => x.category === 'men').length,
@@ -144,21 +154,17 @@ export default function Gallery() {
       kids: allItems.filter((x) => x.category === 'kids').length,
       video: allItems.filter((x) => x.category === 'video').length,
     };
-    return base;
   }, [allItems]);
 
-  // Filtras
   const filtered = useMemo(() => {
     if (activeCat === 'all') return allItems;
     return allItems.filter((x) => x.category === activeCat);
   }, [activeCat, allItems]);
 
-  // Reset visible kai keiti kategoriją
   useEffect(() => {
     setVisible(12);
   }, [activeCat]);
 
-  // Selected item iš filtruotų (kad next/prev veiktų per aktyvų filtrą)
   const selectedIndex = useMemo(() => {
     if (!selectedId) return -1;
     return filtered.findIndex((x) => x.id === selectedId);
@@ -166,7 +172,46 @@ export default function Gallery() {
 
   const selectedItem = selectedIndex >= 0 ? filtered[selectedIndex] : null;
 
-  // TRACK SCROLL
+  const galleryStructuredData = useMemo(() => {
+    const images = allItems
+      .filter((item) => item.type === 'image')
+      .slice(0, 20)
+      .map((item) => ({
+        '@type': 'ImageObject',
+        contentUrl: `${SITE_URL.replace(/\/$/, '')}${item.full}`,
+        thumbnailUrl: `${SITE_URL.replace(/\/$/, '')}${item.thumb}`,
+        name: t[lang].itemAlt(item.category, item.index),
+      }));
+
+    const videos = allItems
+      .filter((item) => item.type === 'video')
+      .map((item) => ({
+        '@type': 'VideoObject',
+        name:
+          lang === 'LT' ? 'Kirpėjos darbo procesas' : 'Hairdressing process',
+        contentUrl: `${SITE_URL.replace(/\/$/, '')}${item.src}`,
+        thumbnailUrl: `${SITE_URL.replace(/\/$/, '')}${item.poster}`,
+      }));
+
+    return JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      name: lang === 'LT' ? 'Kirpėjos darbų galerija' : 'Hairdresser gallery',
+      url: SITE_URL,
+      about: {
+        '@type': 'HairSalon',
+        name: 'Kirpėja Virginija',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Pramonės pr. 15A',
+          addressLocality: 'Kaunas',
+          addressCountry: 'LT',
+        },
+      },
+      hasPart: [...images, ...videos],
+    });
+  }, [allItems, lang]);
+
   useEffect(() => {
     const onScroll = () => {
       const section = document.getElementById('galerija');
@@ -212,7 +257,6 @@ export default function Gallery() {
     });
   };
 
-  // KEYBOARD CONTROLS
   useEffect(() => {
     if (!selectedId) return;
 
@@ -234,9 +278,7 @@ export default function Gallery() {
       className='py-20 bg-[#F8F7F4]'
       aria-labelledby='gallery-heading'
     >
-      {/* SEO */}
       <Helmet>
-        <title>{`${t[lang].title} | Kirpėja Virginija Kaunas`}</title>
         <meta name='description' content={t[lang].desc} />
         <meta
           property='og:title'
@@ -248,9 +290,21 @@ export default function Gallery() {
           property='og:locale'
           content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
         />
-        <link rel='canonical' href='https://kirpeja-virginija.lt/#galerija' />
+        <meta property='og:url' content={SITE_URL} />
+        <meta property='og:image' content={`${SITE_URL}logo.png`} />
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta
+          name='twitter:title'
+          content={`${t[lang].title} | Kirpėja Virginija`}
+        />
+        <meta name='twitter:description' content={t[lang].desc} />
+        <meta name='twitter:image' content={`${SITE_URL}logo.png`} />
 
-        {/* preload pirmų kelių (pagal aktyvų filtrą) */}
+        {/* Jeigu galerija yra tik homepage sekcija, canonical turi likti pagrindinis */}
+        <link rel='canonical' href={SITE_URL} />
+
+        <script type='application/ld+json'>{galleryStructuredData}</script>
+
         {filtered
           .filter((x) => x.type === 'image')
           .slice(0, 3)
@@ -267,8 +321,16 @@ export default function Gallery() {
           {t[lang].title}
         </h2>
 
-        {/* CATEGORY CHIPS */}
-        <div className='flex flex-wrap justify-center gap-2 mb-10'>
+        <p className='max-w-3xl mx-auto text-center text-sm md:text-base text-[#6B6966] mb-8'>
+          {lang === 'LT'
+            ? 'Peržiūrėkite Kirpėjos Virginijos atliktus moterų, vyrų ir vaikų kirpimus, šukuosenas bei kitus plaukų formavimo darbus Kaune.'
+            : 'Browse women’s, men’s and children’s haircuts, hairstyles and other hair styling work by Hairdresser Virginija in Kaunas.'}
+        </p>
+
+        <div
+          className='flex flex-wrap justify-center gap-2 mb-10'
+          aria-label={t[lang].filterAria}
+        >
           {[
             { id: 'all', label: t[lang].cats.all },
             { id: 'women', label: t[lang].cats.women },
@@ -281,6 +343,9 @@ export default function Gallery() {
             return (
               <button
                 key={c.id}
+                type='button'
+                aria-pressed={active}
+                aria-label={`${c.label} (${counts[c.id] ?? 0})`}
                 onClick={() => {
                   setActiveCat(c.id);
                   window.gtag?.('event', 'gallery_filter', {
@@ -307,12 +372,16 @@ export default function Gallery() {
           })}
         </div>
 
-        <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+        <div
+          className='grid grid-cols-2 md:grid-cols-3 gap-4'
+          aria-label={t[lang].gridAria}
+        >
           {filtered.slice(0, visible).map((item, idx) => {
             if (item.type === 'video') {
               return (
                 <button
                   key={item.id}
+                  type='button'
                   onClick={() => {
                     setSelectedId(item.id);
                     window.gtag?.('event', 'gallery_open_video', {
@@ -321,13 +390,13 @@ export default function Gallery() {
                     });
                   }}
                   className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all aspect-[9/16]'
-                  aria-label={`Video ${item.id}`}
+                  aria-label={t[lang].openVideo(item.id)}
                 >
                   <img
                     src={item.poster}
-                    alt='Video poster'
+                    alt={t[lang].videoAlt(item.id)}
                     loading={idx < 1 ? 'eager' : 'lazy'}
-                    fetchpriority={idx < 1 ? 'high' : 'auto'}
+                    fetchPriority={idx < 1 ? 'high' : 'auto'}
                     decoding='async'
                     className='object-cover w-full h-full bg-[#EDEBE8]'
                   />
@@ -355,6 +424,7 @@ export default function Gallery() {
             return (
               <button
                 key={item.id}
+                type='button'
                 onClick={() => {
                   setSelectedId(item.id);
                   window.gtag?.('event', 'gallery_open', {
@@ -367,13 +437,13 @@ export default function Gallery() {
                   containIntrinsicSize: '320px 256px',
                 }}
                 className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all'
-                aria-label={t[lang].itemAlt(item.category, item.index)}
+                aria-label={t[lang].openPhoto(item.category, item.index)}
               >
                 <img
                   src={item.thumb}
                   alt={t[lang].itemAlt(item.category, item.index)}
                   loading={idx < 2 ? 'eager' : 'lazy'}
-                  fetchpriority={idx < 2 ? 'high' : 'auto'}
+                  fetchPriority={idx < 2 ? 'high' : 'auto'}
                   decoding='async'
                   width='400'
                   height='400'
@@ -384,7 +454,6 @@ export default function Gallery() {
           })}
         </div>
 
-        {/* LOAD MORE */}
         {canLoadMore && (
           <div className='text-center mt-10'>
             <Button
@@ -392,7 +461,10 @@ export default function Gallery() {
                 setVisible((v) => v + 9);
                 window.gtag?.('event', 'gallery_load_more', {
                   event_category: 'engagement',
-                  event_label: `Load more pressed (now visible ${Math.min(visible + 9, filtered.length)})`,
+                  event_label: `Load more pressed (now visible ${Math.min(
+                    visible + 9,
+                    filtered.length,
+                  )})`,
                 });
               }}
               className='px-6 py-2'
@@ -403,14 +475,16 @@ export default function Gallery() {
         )}
       </div>
 
-      {/* MODAL */}
       {selectedItem && (
         <div
           className='fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-sm animate-fadeIn'
           onClick={closeModal}
+          role='dialog'
+          aria-modal='true'
+          aria-label={lang === 'LT' ? 'Galerijos peržiūra' : 'Gallery preview'}
         >
-          {/* CLOSE BUTTON */}
           <button
+            type='button'
             onClick={(e) => {
               e.stopPropagation();
               closeModal();
@@ -421,8 +495,8 @@ export default function Gallery() {
             ✕
           </button>
 
-          {/* PREV */}
           <button
+            type='button'
             onClick={(e) => {
               e.stopPropagation();
               showPrev();
@@ -441,8 +515,8 @@ export default function Gallery() {
             </svg>
           </button>
 
-          {/* NEXT */}
           <button
+            type='button'
             onClick={(e) => {
               e.stopPropagation();
               showNext();
@@ -461,11 +535,13 @@ export default function Gallery() {
             </svg>
           </button>
 
-          {/* CONTENT */}
           {selectedItem.type === 'image' ? (
             <img
               src={selectedItem.full}
-              alt='Full size'
+              alt={t[lang].modalImageAlt(
+                selectedItem.category,
+                selectedItem.index,
+              )}
               className='max-h-[90vh] max-w-[90vw] rounded-lg shadow-2xl border border-white/10 animate-zoomIn'
               loading='eager'
               onClick={(e) => e.stopPropagation()}
@@ -499,6 +575,7 @@ export default function Gallery() {
                 playsInline
                 preload='metadata'
                 className='max-h-[90vh] max-w-[90vw]'
+                aria-label={t[lang].videoAlt(selectedItem.id)}
                 onPlay={() => {
                   window.gtag?.('event', 'video_play', {
                     event_category: 'engagement',

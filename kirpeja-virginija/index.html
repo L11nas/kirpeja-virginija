@@ -4,7 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Google Analytics 4 -->
+    <!-- TITLE (labai svarbu) -->
+    <title>Kirpėja Kaune – Virginija | Moterų ir vyrų kirpimas Dainava</title>
+
+    <!-- DESCRIPTION -->
+    <meta
+      name="description"
+      content="Kirpėja Kaune (Dainava) – moterų ir vyrų kirpimas, plaukų dažymas, barzdos modeliavimas. Adresas: Pramonės pr. 15A. Registracija telefonu."
+    />
+
+    <!-- CANONICAL -->
+    <link rel="canonical" href="https://kirpeja-virginija.lt/" />
+
+    <!-- FAVICON -->
+    <link rel="icon" href="/favicon.png" />
+
+    <!-- OPEN GRAPH -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kirpėja Kaune – Virginija" />
+    <meta
+      property="og:description"
+      content="Profesionalus kirpimas Kaune. Patogu iš Dainavos, Šančių, Petrašiūnų."
+    />
+    <meta property="og:url" content="https://kirpeja-virginija.lt/" />
+    <meta property="og:image" content="https://kirpeja-virginija.lt/logo.png" />
+
+    <!-- GOOGLE -->
+    <meta name="robots" content="index, follow" />
+
+    <!-- SCHEMA (LABAI SVARBU) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "HairSalon",
+        "name": "Kirpėja Virginija",
+        "image": "https://kirpeja-virginija.lt/logo.png",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Pramonės pr. 15A",
+          "addressLocality": "Kaunas",
+          "addressCountry": "LT"
+        },
+        "areaServed": "Kaunas",
+        "priceRange": "€€",
+        "url": "https://kirpeja-virginija.lt/"
+      }
+    </script>
+
+    <!-- GA4 -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-DXNNZXMTWT"
@@ -20,57 +67,11 @@
       gtag('config', 'G-DXNNZXMTWT');
     </script>
 
-    <link rel="icon" type="image/png" href="/favicon.png" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <title>Kirpėja Virginija – Profesionalus kirpimas Kaune</title>
-    <link rel="canonical" href="https://kirpeja-virginija.lt/" />
-
-    <meta
-      name="title"
-      content="Kirpėja Virginija – Profesionalus kirpimas Kaune"
-    />
-    <meta
-      name="description"
-      content="Kirpėja Kaune (Dainava). Adresas: Pramonės pr. 15A. Patogiai pasiekiama iš Petrašiūnų, Šančių, Eigulių ir Žaliakalnio. Profesionalus moterų ir vyrų kirpimas."
-    />
-
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="Kirpėja Virginija – Profesionalus kirpimas Kaune"
-    />
-    <meta
-      property="og:description"
-      content="Jauki aplinka, profesionalios paslaugos ir dėmesys detalėms. Teikiamos kirpimo ir plaukų priežiūros paslaugos Kaune."
-    />
-    <meta property="og:url" content="https://kirpeja-virginija.lt/" />
-    <meta property="og:image" content="https://kirpeja-virginija.lt/logo.png" />
-    <meta property="og:locale" content="lt_LT" />
-    <meta property="og:site_name" content="Kirpėja Virginija" />
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "HairSalon",
-        "name": "Kirpėja Virginija",
-        "image": "https://kirpeja-virginija.lt/logo.png",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Pramonės pr. 15A",
-          "addressLocality": "Kaunas",
-          "addressCountry": "LT"
-        },
-        "url": "https://kirpeja-virginija.lt/",
-        "priceRange": "€€",
-        "openingHours": ["Mo-Fr 09:00-19:00", "Sa 09:00-15:00"]
-      }
-    </script>
+    <!-- VITE -->
+    <script type="module" src="/src/main.jsx"></script>
   </head>
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

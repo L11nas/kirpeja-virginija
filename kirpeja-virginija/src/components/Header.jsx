@@ -4,6 +4,7 @@ import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
 
 const PHONE_TEL = 'tel:+37065460937';
+const TREATWELL_URL = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,6 +19,17 @@ export default function Header() {
       contact: 'Kontaktai',
       book: 'Registruokis',
       call: 'Skambinti',
+      mainNav: 'Pagrindinė navigacija',
+      backToTop: 'Grįžti į pradžią',
+      openMenu: 'Atidaryti meniu',
+      closeMenu: 'Uždaryti meniu',
+      logoLabel: 'Kirpėja Virginija',
+      bookAria: 'Registruotis vizitui internetu per Treatwell',
+      callAria: 'Skambinti kirpėjai Virginijai',
+      servicesAria: 'Pereiti į paslaugų skiltį',
+      galleryAria: 'Pereiti į galerijos skiltį',
+      contactAria: 'Pereiti į kontaktų skiltį',
+      switchLang: 'Pakeisti svetainės kalbą',
     },
     EN: {
       services: 'Services',
@@ -25,6 +37,17 @@ export default function Header() {
       contact: 'Contact',
       book: 'Book now',
       call: 'Call',
+      mainNav: 'Main navigation',
+      backToTop: 'Back to top',
+      openMenu: 'Open menu',
+      closeMenu: 'Close menu',
+      logoLabel: 'Hairdresser Virginija',
+      bookAria: 'Book an appointment online via Treatwell',
+      callAria: 'Call hairdresser Virginija',
+      servicesAria: 'Go to services section',
+      galleryAria: 'Go to gallery section',
+      contactAria: 'Go to contact section',
+      switchLang: 'Change website language',
     },
   };
 
@@ -62,29 +85,44 @@ export default function Header() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className='flex items-center gap-2 hover:opacity-90 transition'
-          aria-label={lang === 'LT' ? 'Grįžti į pradžią' : 'Back to top'}
+          aria-label={t[lang].backToTop}
+          title={t[lang].logoLabel}
         >
-          <h1 className='leading-tight font-serif text-[#3E3B38]'>
+          <div className='leading-tight font-serif text-[#3E3B38]'>
             <span className='block text-lg'>Kirpėja</span>
             <span className='block -mt-1 text-[#C1A173]'>Virginija</span>
-          </h1>
+          </div>
         </a>
 
         {/* Desktop Navigation */}
-        <nav className='hidden md:flex items-center gap-6 text-[#3E3B38]'>
-          <a href='#paslaugos' className='hover:text-[#C1A173] transition'>
+        <nav
+          className='hidden md:flex items-center gap-6 text-[#3E3B38]'
+          aria-label={t[lang].mainNav}
+        >
+          <a
+            href='#paslaugos'
+            className='hover:text-[#C1A173] transition'
+            aria-label={t[lang].servicesAria}
+          >
             {t[lang].services}
           </a>
 
-          <a href='#galerija' className='hover:text-[#C1A173] transition'>
+          <a
+            href='#galerija'
+            className='hover:text-[#C1A173] transition'
+            aria-label={t[lang].galleryAria}
+          >
             {t[lang].gallery}
           </a>
 
-          <a href='#kontaktai' className='hover:text-[#C1A173] transition'>
+          <a
+            href='#kontaktai'
+            className='hover:text-[#C1A173] transition'
+            aria-label={t[lang].contactAria}
+          >
             {t[lang].contact}
           </a>
 
-          {/* Call button (DESKTOP) */}
           <a
             href={PHONE_TEL}
             className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
@@ -94,25 +132,33 @@ export default function Header() {
                 event_label: 'Header Desktop Call',
               });
             }}
-            aria-label={t[lang].call}
+            aria-label={t[lang].callAria}
+            title={t[lang].call}
           >
             <Phone size={18} className='text-[#C1A173]' />
             <span className='text-sm font-medium'>{t[lang].call}</span>
           </a>
 
           {/* Language Switch */}
-          <div className='hidden md:flex items-center'>
+          <div
+            className='hidden md:flex items-center'
+            aria-label={t[lang].switchLang}
+          >
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
+                  type='button'
                   onClick={() => {
+                    if (lang === code) return;
                     window.gtag?.('event', 'language_switch', {
                       event_category: 'engagement',
                       event_label: `${lang} → ${code}`,
                     });
                     toggleLang();
                   }}
+                  aria-pressed={lang === code}
+                  aria-label={`${t[lang].switchLang}: ${code}`}
                   className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
                     lang === code
                       ? 'bg-[#C1A173] text-white shadow-sm'
@@ -125,12 +171,12 @@ export default function Header() {
             </div>
           </div>
 
-          {/* CTA */}
           <Button
             as='a'
-            href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
+            href={TREATWELL_URL}
             target='_blank'
             rel='noopener noreferrer'
+            aria-label={t[lang].bookAria}
             className='px-5 py-2'
             onClick={() => {
               window.gtag?.('event', 'booking_click', {
@@ -143,9 +189,8 @@ export default function Header() {
           </Button>
         </nav>
 
-        {/* Mobile Actions (Call + Hamburger) */}
+        {/* Mobile Actions */}
         <div className='md:hidden flex items-center gap-2'>
-          {/* Mobile Call button (VISADA MATOMAS) */}
           <a
             href={PHONE_TEL}
             className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
@@ -155,29 +200,35 @@ export default function Header() {
                 event_label: 'Header Mobile Top Call',
               });
             }}
-            aria-label={t[lang].call}
+            aria-label={t[lang].callAria}
             title={t[lang].call}
           >
             <Phone size={18} className='text-[#C1A173]' />
           </a>
 
-          {/* Hamburger */}
           <button
+            type='button'
             onClick={() => setMenuOpen((v) => !v)}
             className='text-[#3E3B38]'
-            aria-label={menuOpen ? 'Uždaryti meniu' : 'Atidaryti meniu'}
+            aria-label={menuOpen ? t[lang].closeMenu : t[lang].openMenu}
+            aria-expanded={menuOpen}
+            aria-controls='mobile-menu'
           >
             {menuOpen ? <X size={26} /> : <Menu size={26} />}
           </button>
         </div>
       </div>
 
-      {/* MOBILE MENU */}
       {menuOpen && (
-        <nav className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'>
+        <nav
+          id='mobile-menu'
+          className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'
+          aria-label={t[lang].mainNav}
+        >
           <a
             href='#paslaugos'
             className='block hover:text-[#C1A173]'
+            aria-label={t[lang].servicesAria}
             onClick={() => setMenuOpen(false)}
           >
             {t[lang].services}
@@ -186,6 +237,7 @@ export default function Header() {
           <a
             href='#galerija'
             className='block hover:text-[#C1A173]'
+            aria-label={t[lang].galleryAria}
             onClick={() => setMenuOpen(false)}
           >
             {t[lang].gallery}
@@ -194,17 +246,18 @@ export default function Header() {
           <a
             href='#kontaktai'
             className='block hover:text-[#C1A173]'
+            aria-label={t[lang].contactAria}
             onClick={() => setMenuOpen(false)}
           >
             {t[lang].contact}
           </a>
 
-          {/* CTA (MOBILE) */}
           <Button
             as='a'
-            href='https://book.treatwell.lt/salonas/kirpeja-virginija/'
+            href={TREATWELL_URL}
             target='_blank'
             rel='noopener noreferrer'
+            aria-label={t[lang].bookAria}
             className='mx-auto px-6 py-2'
             onClick={() => {
               window.gtag?.('event', 'booking_click', {
@@ -217,13 +270,17 @@ export default function Header() {
             {t[lang].book}
           </Button>
 
-          {/* Language Switch (Mobile) */}
-          <div className='flex justify-center pt-2'>
+          <div
+            className='flex justify-center pt-2'
+            aria-label={t[lang].switchLang}
+          >
             <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
+                  type='button'
                   onClick={() => {
+                    if (lang === code) return;
                     window.gtag?.('event', 'language_switch', {
                       event_category: 'engagement',
                       event_label: `${lang} → ${code}`,
@@ -231,6 +288,8 @@ export default function Header() {
                     toggleLang();
                     setMenuOpen(false);
                   }}
+                  aria-pressed={lang === code}
+                  aria-label={`${t[lang].switchLang}: ${code}`}
                   className={`px-4 py-1 text-sm font-medium rounded-full ${
                     lang === code
                       ? 'bg-[#C1A173] text-white'

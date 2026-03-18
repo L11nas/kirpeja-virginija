@@ -1,15 +1,24 @@
 import { Helmet } from 'react-helmet-async';
 import { useLanguage } from '../context/LanguageContext';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import Button from '../components/ui/Button';
 
 export default function Services() {
   const { lang } = useLanguage();
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
+  const siteUrl = 'https://kirpeja-virginija.lt/';
+  const pageTitle =
+    lang === 'LT'
+      ? 'Kirpimo paslaugos Kaune – moterų, vyrų ir vaikų kirpimas | Kirpėja Virginija'
+      : 'Hair services in Kaunas – women’s, men’s and children’s haircuts | Hairdresser Virginija';
+
+  const pageDescription =
+    lang === 'LT'
+      ? 'Kirpėja Virginija Kaune teikia moterų, vyrų ir vaikų kirpimo, barzdos modeliavimo, plaukų pynimo, bangavimo ir cheminio sušukavimo paslaugas. Patogi registracija internetu per Treatwell.'
+      : 'Hairdresser Virginija in Kaunas offers women’s, men’s and children’s haircuts, beard styling, braiding, express styling and perms. Easy online booking via Treatwell.';
 
   // --- SERVICES LIST ---
-  // Kaina: { amount: '15 €', from: true } -> LT: "nuo 15 €", EN: "from 15 €"
   const services = [
     {
       id: 'women-haircut',
@@ -90,12 +99,53 @@ export default function Services() {
 
   const formatPrice = (price) => {
     if (!price) return '';
-    if (typeof price === 'string') return price; // jei kažkur liktų senas formatas
+    if (typeof price === 'string') return price;
     const prefix = price.from ? (lang === 'LT' ? 'nuo ' : 'from ') : '';
     return `${prefix}${price.amount}`;
   };
 
-  // SCROLL TRACKING → fiksuoja, kada useris pasiekia paslaugų sekciją
+  const structuredData = useMemo(() => {
+    const itemList = {
+      '@context': 'https://schema.org',
+      '@type': 'ItemList',
+      name:
+        lang === 'LT' ? 'Kirpimo paslaugos Kaune' : 'Hair services in Kaunas',
+      itemListElement: services.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Service',
+          name: lang === 'LT' ? item.name.lt : item.name.en,
+          description: lang === 'LT' ? item.desc.lt : item.desc.en,
+          provider: {
+            '@type': 'HairSalon',
+            name: 'Kirpėja Virginija',
+            url: siteUrl,
+            address: {
+              '@type': 'PostalAddress',
+              streetAddress: 'Pramonės pr. 15A',
+              addressLocality: 'Kaunas',
+              addressCountry: 'LT',
+            },
+          },
+          areaServed: {
+            '@type': 'City',
+            name: 'Kaunas',
+          },
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'EUR',
+            price: item.price.amount.replace(' €', ''),
+            url: treatwellUrl,
+            availability: 'https://schema.org/InStock',
+          },
+        },
+      })),
+    };
+
+    return JSON.stringify(itemList);
+  }, [lang, services]);
+
   useEffect(() => {
     const onScroll = () => {
       const section = document.getElementById('paslaugos');
@@ -122,24 +172,35 @@ export default function Services() {
       className='py-20 bg-white'
       aria-labelledby='services-heading'
     >
-      {/* SEO META */}
       <Helmet>
-        <title>
-          {lang === 'LT'
-            ? 'Kirpėja Virginija – Kirpimo paslaugos ir kainos Kaune'
-            : 'Hairdresser Virginija – Hair services and prices in Kaunas'}
-        </title>
+        <html lang={lang === 'LT' ? 'lt' : 'en'} />
+        <title>{pageTitle}</title>
+        <meta name='description' content={pageDescription} />
+        <meta name='robots' content='index,follow' />
 
+        {/* Canonical – be #hash */}
+        <link rel='canonical' href={siteUrl} />
+
+        {/* Open Graph */}
+        <meta property='og:type' content='website' />
         <meta
-          name='description'
-          content={
-            lang === 'LT'
-              ? 'Kirpėja Virginija Kaune (Gričiupis) teikia moterų, vyrų ir vaikų kirpimo, bangavimo, barzdos modeliavimo, pynimų ir cheminio sušukavimo paslaugas. Patogus registravimas internetu per Treatwell.'
-              : 'Hairdresser Virginija in Kaunas offers women’s, men’s and children’s haircuts, express styling, braiding, beard grooming and perms. Easy online booking via Treatwell.'
-          }
+          property='og:locale'
+          content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
         />
+        <meta property='og:site_name' content='Kirpėja Virginija' />
+        <meta property='og:title' content={pageTitle} />
+        <meta property='og:description' content={pageDescription} />
+        <meta property='og:url' content={siteUrl} />
+        <meta property='og:image' content={`${siteUrl}logo.png`} />
 
-        <link rel='canonical' href='https://kirpeja-virginija.lt/#paslaugos' />
+        {/* Twitter */}
+        <meta name='twitter:card' content='summary_large_image' />
+        <meta name='twitter:title' content={pageTitle} />
+        <meta name='twitter:description' content={pageDescription} />
+        <meta name='twitter:image' content={`${siteUrl}logo.png`} />
+
+        {/* Structured data */}
+        <script type='application/ld+json'>{structuredData}</script>
       </Helmet>
 
       <div className='max-w-5xl mx-auto px-6 text-center'>
@@ -147,16 +208,17 @@ export default function Services() {
           id='services-heading'
           className='text-3xl font-serif mb-10 text-[#3E3B38]'
         >
-          {lang === 'LT' ? 'Teikiamos paslaugos' : 'Available services'}
+          {lang === 'LT'
+            ? 'Kirpimo paslaugos Kaune'
+            : 'Hair services in Kaunas'}
         </h2>
 
         <p className='max-w-2xl mx-auto text-sm md:text-base text-[#6B6966] mb-10'>
           {lang === 'LT'
-            ? 'Paslaugos atliekamos jaukioje aplinkoje Gričiupio mikrorajone, lengvai pasiekiamoje iš Dainavos, Petrašiūnų, Šančių, Eigulių ir Žaliakalnio. Rinkitės paslaugą ir registruokitės internetu.'
-            : 'Services are provided in a cosy salon in Kaunas (Gričiupis district), easily reachable from nearby areas. Choose a service and book your visit online.'}
+            ? 'Kirpėja Virginija teikia moterų, vyrų ir vaikų kirpimo paslaugas Kaune. Taip pat atliekamas barzdos modeliavimas, plaukų pynimas, šukuosenos ir cheminis sušukavimas. Paslaugos atliekamos jaukioje aplinkoje, patogiai pasiekiamoje iš Dainavos, Petrašiūnų, Šančių, Eigulių ir Žaliakalnio.'
+            : 'Hairdresser Virginija offers women’s, men’s and children’s haircuts in Kaunas, as well as beard styling, braiding, special occasion styling and perms. Services are provided in a cosy salon, easily reachable from nearby districts.'}
         </p>
 
-        {/* Services Grid */}
         <div
           className='grid md:grid-cols-2 gap-6'
           aria-label={
@@ -171,6 +233,11 @@ export default function Services() {
               href={treatwellUrl}
               target='_blank'
               rel='noopener noreferrer'
+              aria-label={`${
+                lang === 'LT' ? item.name.lt : item.name.en
+              } – ${formatPrice(item.price)}. ${
+                lang === 'LT' ? 'Registruotis internetu' : 'Book online'
+              }`}
               onClick={() => {
                 window.gtag?.('event', 'service_click', {
                   event_category: 'engagement',
@@ -200,7 +267,6 @@ export default function Services() {
           ))}
         </div>
 
-        {/* CTA */}
         <Button
           as='a'
           href={treatwellUrl}
