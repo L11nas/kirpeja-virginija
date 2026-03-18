@@ -28,9 +28,15 @@
       property="og:description"
       content="Profesionalus kirpimas ir plaukų priežiūra Kaune."
     />
-    <meta property="og:image" content="/img/hero-bg.webp" />
-    <meta property="og:url" content="https://kirpeja-virginija.lt" />
+    <meta
+      property="og:image"
+      content="https://kirpeja-virginija.lt/img/hero-bg.webp"
+    />
+    <meta property="og:url" content="https://kirpeja-virginija.lt/" />
     <meta property="og:type" content="website" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://kirpeja-virginija.lt/" />
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
@@ -38,18 +44,17 @@
         "@context": "https://schema.org",
         "@type": "HairSalon",
         "name": "Kirpėja Virginija",
-        "url": "https://kirpeja-virginija.lt",
+        "url": "https://kirpeja-virginija.lt/",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Pramonės pr. 15A",
           "addressLocality": "Kaunas",
           "addressCountry": "LT"
-        },
-        "telephone": "+37065460937"
+        }
       }
     </script>
 
-    <!-- GA4 – teisinga versija su page_view -->
+    <!-- Google Analytics 4 -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-DXNNZXMTWT"
@@ -59,11 +64,19 @@
       function gtag() {
         dataLayer.push(arguments);
       }
+      window.gtag = gtag;
+
       gtag('js', new Date());
       gtag('config', 'G-DXNNZXMTWT');
+
+      gtag('event', 'page_view', {
+        page_title: document.title,
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+      });
     </script>
 
-    <!-- Vite sugeneruoti bundle failai (PRIVALOMA palikti) -->
+    <!-- Vite bundle -->
     <script type="module" crossorigin src="/assets/index-h7pLAsOz.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-9X-_E54j.css" />
   </head>
