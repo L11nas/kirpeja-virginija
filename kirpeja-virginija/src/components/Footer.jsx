@@ -17,31 +17,32 @@ export default function Footer() {
   const siteUrl = 'https://kirpeja-virginija.lt/';
   const phoneRaw = '+37065460937';
 
+  const trackEvent = (eventName, params = {}) => {
+    window.gtag?.('event', eventName, {
+      language: lang,
+      page_path: window.location.pathname,
+      page_location: window.location.href,
+      ...params,
+    });
+  };
+
   const t = {
     LT: {
       brandTop: 'Kirpėja',
       brandBottom: 'Virginija',
-
       addressLabel: 'Adresas:',
       address: 'Pramonės pr. 15A, Kaunas',
-
       phoneLabel: 'Telefonas:',
       phone: '+37065460937',
-
       hoursLabel: 'Darbo laikas:',
       hours: 'I–V 9:00–19:00, VI 9:00–15:00',
-
       cookies:
         'Ši svetainė naudoja tik statistinius slapukus (Google Analytics), kurie padeda gerinti svetainės veikimą.',
-
       privacy: 'Privatumo politika',
       backHome: 'Grįžti į pradžią',
-
       fb: 'Sekite mus Facebook',
-
       rights: 'Svetainę sukūrė ',
       creator: 'Linas Ulevičius',
-
       addressAria: 'Atidaryti adresą Google žemėlapiuose',
       phoneAria: 'Skambinti kirpėjai Virginijai',
       facebookAria: 'Atidaryti Kirpėjos Virginijos Facebook puslapį',
@@ -52,27 +53,19 @@ export default function Footer() {
     EN: {
       brandTop: 'Hairdresser',
       brandBottom: 'Virginija',
-
       addressLabel: 'Address:',
       address: 'Pramonės Ave. 15A, Kaunas',
-
       phoneLabel: 'Phone:',
       phone: '+37065460937',
-
       hoursLabel: 'Working hours:',
       hours: 'Mon–Fri 9:00–19:00, Sat 9:00–15:00',
-
       cookies:
         'This website uses only statistical cookies (Google Analytics) to improve performance.',
-
       privacy: 'Privacy Policy',
       backHome: 'Back to home',
-
       fb: 'Follow us on Facebook',
-
       rights: 'Website created by ',
       creator: 'Linas Ulevičius',
-
       addressAria: 'Open address in Google Maps',
       phoneAria: 'Call hairdresser Virginija',
       facebookAria: 'Open Hairdresser Virginija Facebook page',
@@ -88,9 +81,8 @@ export default function Footer() {
   };
 
   const goPrivacyTop = () => {
-    window.gtag?.('event', 'privacy_click', {
-      event_category: 'engagement',
-      event_label: 'footer_privacy',
+    trackEvent('privacy_click', {
+      link_location: 'footer',
     });
 
     navigate('/privatumo-politika', { replace: true });
@@ -105,7 +97,6 @@ export default function Footer() {
       itemScope
       itemType='https://schema.org/HairSalon'
     >
-      {/* SEO microdata */}
       <meta itemProp='name' content='Kirpėja Virginija' />
       <meta itemProp='url' content={siteUrl} />
       <meta itemProp='telephone' content={phoneRaw} />
@@ -126,7 +117,6 @@ export default function Footer() {
       <meta itemProp='openingHours' content='Sa 09:00-15:00' />
 
       <div className='max-w-5xl mx-auto text-center text-[#3E3B38] space-y-4 px-6'>
-        {/* Brand */}
         <div className='leading-tight font-serif'>
           <span className='block text-xl'>{t[lang].brandTop}</span>
           <span className='block -mt-1 text-[#C1A173] text-lg'>
@@ -134,7 +124,6 @@ export default function Footer() {
           </span>
         </div>
 
-        {/* Address */}
         <p>
           <span className='font-medium'>{t[lang].addressLabel}</span>{' '}
           <a
@@ -144,9 +133,9 @@ export default function Footer() {
             className='underline hover:text-[#8A744F] transition'
             aria-label={t[lang].addressAria}
             onClick={() =>
-              window.gtag?.('event', 'click_map', {
-                event_category: 'engagement',
-                event_label: 'footer_map',
+              trackEvent('maps_click', {
+                link_location: 'footer',
+                destination: 'google_maps',
               })
             }
           >
@@ -154,7 +143,6 @@ export default function Footer() {
           </a>
         </p>
 
-        {/* Phone */}
         <p>
           <span className='font-medium'>{t[lang].phoneLabel}</span>{' '}
           <a
@@ -163,9 +151,10 @@ export default function Footer() {
             itemProp='telephone'
             aria-label={t[lang].phoneAria}
             onClick={() =>
-              window.gtag?.('event', 'call_click', {
-                event_category: 'engagement',
-                event_label: 'footer_call',
+              trackEvent('phone_click', {
+                link_location: 'footer',
+                device_type: 'unknown',
+                event_label: 'footer_phone',
               })
             }
           >
@@ -173,13 +162,11 @@ export default function Footer() {
           </a>
         </p>
 
-        {/* Hours */}
         <p>
           <span className='font-medium'>{t[lang].hoursLabel}</span>{' '}
           <span>{t[lang].hours}</span>
         </p>
 
-        {/* Facebook */}
         <div className='flex justify-center'>
           <a
             href={facebookUrl}
@@ -188,9 +175,9 @@ export default function Footer() {
             className='flex items-center gap-2 hover:text-[#8A744F] transition'
             aria-label={t[lang].facebookAria}
             onClick={() =>
-              window.gtag?.('event', 'click_facebook', {
-                event_category: 'social',
-                event_label: 'footer_facebook',
+              trackEvent('facebook_click', {
+                link_location: 'footer',
+                destination: 'facebook',
               })
             }
           >
@@ -199,10 +186,8 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Cookies */}
         <p className='text-sm text-[#6C6C6C]'>{t[lang].cookies}</p>
 
-        {/* Privacy */}
         {!isPrivacy && (
           <button
             type='button'
@@ -214,7 +199,6 @@ export default function Footer() {
           </button>
         )}
 
-        {/* Creator */}
         <p className='text-sm text-[#6C6C6C]'>
           © {new Date().getFullYear()} Kirpėja Virginija. {t[lang].rights}
           <a
@@ -224,9 +208,9 @@ export default function Footer() {
             className='underline hover:text-[#8A744F]'
             aria-label={t[lang].creatorAria}
             onClick={() =>
-              window.gtag?.('event', 'creator_click', {
-                event_category: 'engagement',
-                event_label: 'footer_creator',
+              trackEvent('creator_click', {
+                link_location: 'footer',
+                destination: 'linkedin',
               })
             }
           >

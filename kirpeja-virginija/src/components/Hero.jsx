@@ -8,10 +8,18 @@ export default function Hero() {
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
+  const trackEvent = (eventName, params = {}) => {
+    window.gtag?.('event', eventName, {
+      language: lang,
+      page_path: window.location.pathname,
+      page_location: window.location.href,
+      ...params,
+    });
+  };
+
   useEffect(() => {
-    window.gtag?.('event', 'view_hero', {
-      event_category: 'section_view',
-      event_label: 'Hero section viewed',
+    trackEvent('hero_view', {
+      link_location: 'hero',
     });
   }, []);
 
@@ -68,9 +76,8 @@ export default function Hero() {
         onLoadedData={() => setVideoReady(true)}
         onError={() => setVideoReady(false)}
         onPlay={() => {
-          window.gtag?.('event', 'hero_video_play', {
-            event_category: 'engagement',
-            event_label: 'Hero background video started',
+          trackEvent('hero_video_play', {
+            link_location: 'hero',
           });
         }}
       >
@@ -100,9 +107,11 @@ export default function Hero() {
           aria-label={t[lang].ctaAria}
           className='mt-8 px-10'
           onClick={() => {
-            window.gtag?.('event', 'booking_click', {
-              event_category: 'engagement',
-              event_label: 'Hero CTA',
+            trackEvent('booking_click', {
+              link_location: 'hero',
+              device_type: window.innerWidth >= 768 ? 'desktop' : 'mobile',
+              destination: 'treatwell',
+              event_label: 'hero_booking',
             });
           }}
         >

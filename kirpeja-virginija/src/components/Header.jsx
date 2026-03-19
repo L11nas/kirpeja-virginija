@@ -12,6 +12,15 @@ export default function Header() {
   const [hidden, setHidden] = useState(false);
   const { lang, toggleLang } = useLanguage();
 
+  const trackEvent = (eventName, params = {}) => {
+    window.gtag?.('event', eventName, {
+      language: lang,
+      page_path: window.location.pathname,
+      page_location: window.location.href,
+      ...params,
+    });
+  };
+
   const t = {
     LT: {
       services: 'Paslaugos',
@@ -76,12 +85,16 @@ export default function Header() {
       }`}
     >
       <div className='max-w-6xl mx-auto flex justify-between items-center py-3 px-6'>
-        {/* Logo */}
         <a
           href='#hero'
           onClick={(e) => {
             e.preventDefault();
             setMenuOpen(false);
+            trackEvent('nav_click', {
+              link_location: 'header',
+              target_section: 'hero',
+              device_type: window.innerWidth >= 768 ? 'desktop' : 'mobile',
+            });
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }}
           className='flex items-center gap-2 hover:opacity-90 transition'
@@ -94,7 +107,6 @@ export default function Header() {
           </div>
         </a>
 
-        {/* Desktop Navigation */}
         <nav
           className='hidden md:flex items-center gap-6 text-[#3E3B38]'
           aria-label={t[lang].mainNav}
@@ -103,6 +115,13 @@ export default function Header() {
             href='#paslaugos'
             className='hover:text-[#C1A173] transition'
             aria-label={t[lang].servicesAria}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'header',
+                target_section: 'services',
+                device_type: 'desktop',
+              });
+            }}
           >
             {t[lang].services}
           </a>
@@ -111,6 +130,13 @@ export default function Header() {
             href='#galerija'
             className='hover:text-[#C1A173] transition'
             aria-label={t[lang].galleryAria}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'header',
+                target_section: 'gallery',
+                device_type: 'desktop',
+              });
+            }}
           >
             {t[lang].gallery}
           </a>
@@ -119,6 +145,13 @@ export default function Header() {
             href='#kontaktai'
             className='hover:text-[#C1A173] transition'
             aria-label={t[lang].contactAria}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'header',
+                target_section: 'contact',
+                device_type: 'desktop',
+              });
+            }}
           >
             {t[lang].contact}
           </a>
@@ -127,9 +160,10 @@ export default function Header() {
             href={PHONE_TEL}
             className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
             onClick={() => {
-              window.gtag?.('event', 'call_click', {
-                event_category: 'engagement',
-                event_label: 'Header Desktop Call',
+              trackEvent('phone_click', {
+                link_location: 'header',
+                device_type: 'desktop',
+                event_label: 'header_desktop_call',
               });
             }}
             aria-label={t[lang].callAria}
@@ -139,7 +173,6 @@ export default function Header() {
             <span className='text-sm font-medium'>{t[lang].call}</span>
           </a>
 
-          {/* Language Switch */}
           <div
             className='hidden md:flex items-center'
             aria-label={t[lang].switchLang}
@@ -151,10 +184,13 @@ export default function Header() {
                   type='button'
                   onClick={() => {
                     if (lang === code) return;
-                    window.gtag?.('event', 'language_switch', {
-                      event_category: 'engagement',
-                      event_label: `${lang} → ${code}`,
+
+                    trackEvent('language_switch', {
+                      link_location: 'header',
+                      from_language: lang,
+                      to_language: code,
                     });
+
                     toggleLang();
                   }}
                   aria-pressed={lang === code}
@@ -179,9 +215,11 @@ export default function Header() {
             aria-label={t[lang].bookAria}
             className='px-5 py-2'
             onClick={() => {
-              window.gtag?.('event', 'booking_click', {
-                event_category: 'engagement',
-                event_label: 'Header Desktop CTA',
+              trackEvent('booking_click', {
+                link_location: 'header',
+                device_type: 'desktop',
+                destination: 'treatwell',
+                event_label: 'header_desktop_booking',
               });
             }}
           >
@@ -189,15 +227,15 @@ export default function Header() {
           </Button>
         </nav>
 
-        {/* Mobile Actions */}
         <div className='md:hidden flex items-center gap-2'>
           <a
             href={PHONE_TEL}
             className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
             onClick={() => {
-              window.gtag?.('event', 'call_click', {
-                event_category: 'engagement',
-                event_label: 'Header Mobile Top Call',
+              trackEvent('phone_click', {
+                link_location: 'header',
+                device_type: 'mobile',
+                event_label: 'header_mobile_call',
               });
             }}
             aria-label={t[lang].callAria}
@@ -229,7 +267,14 @@ export default function Header() {
             href='#paslaugos'
             className='block hover:text-[#C1A173]'
             aria-label={t[lang].servicesAria}
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'mobile_menu',
+                target_section: 'services',
+                device_type: 'mobile',
+              });
+              setMenuOpen(false);
+            }}
           >
             {t[lang].services}
           </a>
@@ -238,7 +283,14 @@ export default function Header() {
             href='#galerija'
             className='block hover:text-[#C1A173]'
             aria-label={t[lang].galleryAria}
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'mobile_menu',
+                target_section: 'gallery',
+                device_type: 'mobile',
+              });
+              setMenuOpen(false);
+            }}
           >
             {t[lang].gallery}
           </a>
@@ -247,7 +299,14 @@ export default function Header() {
             href='#kontaktai'
             className='block hover:text-[#C1A173]'
             aria-label={t[lang].contactAria}
-            onClick={() => setMenuOpen(false)}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'mobile_menu',
+                target_section: 'contact',
+                device_type: 'mobile',
+              });
+              setMenuOpen(false);
+            }}
           >
             {t[lang].contact}
           </a>
@@ -260,9 +319,11 @@ export default function Header() {
             aria-label={t[lang].bookAria}
             className='mx-auto px-6 py-2'
             onClick={() => {
-              window.gtag?.('event', 'booking_click', {
-                event_category: 'engagement',
-                event_label: 'Header Mobile CTA',
+              trackEvent('booking_click', {
+                link_location: 'mobile_menu',
+                device_type: 'mobile',
+                destination: 'treatwell',
+                event_label: 'header_mobile_booking',
               });
               setMenuOpen(false);
             }}
@@ -281,10 +342,13 @@ export default function Header() {
                   type='button'
                   onClick={() => {
                     if (lang === code) return;
-                    window.gtag?.('event', 'language_switch', {
-                      event_category: 'engagement',
-                      event_label: `${lang} → ${code}`,
+
+                    trackEvent('language_switch', {
+                      link_location: 'mobile_menu',
+                      from_language: lang,
+                      to_language: code,
                     });
+
                     toggleLang();
                     setMenuOpen(false);
                   }}
