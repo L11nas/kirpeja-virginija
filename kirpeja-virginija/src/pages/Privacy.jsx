@@ -1,9 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import Seo from '../components/Seo';
 
 export default function Privacy() {
-  const navigate = useNavigate();
-  const { lang } = useLanguage();
+  const { lang, pathFor } = useLanguage();
 
   const t = {
     LT: {
@@ -35,7 +35,7 @@ export default function Privacy() {
 
       cookiesTitle: '5. Slapukai',
       cookiesText:
-        'Naudojami tik būtini ir statistiniai slapukai svetainės veikimo gerinimui. Asmeniniai duomenys nerenkami.',
+        'Statistiniai slapukai (Google Analytics) įjungiami tik gavus Jūsų sutikimą. Sutikimą bet kada galite pakeisti paspaudę „Slapukų nustatymai“ puslapio apačioje. Jūsų pasirinkimas saugomas tik Jūsų naršyklėje.',
 
       rightsTitle: '6. Jūsų teisės',
       rightsText:
@@ -76,7 +76,7 @@ export default function Privacy() {
 
       cookiesTitle: '5. Cookies',
       cookiesText:
-        'Only necessary and statistical cookies are used to improve performance. No personal data is collected.',
+        'Statistical cookies (Google Analytics) are enabled only with your consent. You can change your choice at any time via “Cookie settings” at the bottom of the page. Your choice is stored only in your browser.',
 
       rightsTitle: '6. Your rights',
       rightsText:
@@ -88,20 +88,20 @@ export default function Privacy() {
     },
   };
 
-  const goHomeTop = () => {
-    navigate('/', { replace: true });
-
-    // scroll į patį viršų po route change
-    setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 50);
-  };
-
   const L = t[lang];
 
   return (
-    <section className='min-h-screen bg-[#F8F7F4] py-20 px-6'>
-      <div className='max-w-3xl mx-auto text-[#3E3B38] space-y-6 leading-relaxed'>
+    <section className='min-h-screen bg-sand py-20 px-6'>
+      <Seo
+        page='privacy'
+        title={lang === 'LT' ? 'Privatumo politika | Kirpėja Virginija Kaune' : 'Privacy Policy | Hairdresser Virginija Kaunas'}
+        description={
+          lang === 'LT'
+            ? 'Kirpėjos Virginijos svetainės privatumo politika: kokie duomenys renkami, slapukai ir Jūsų teisės.'
+            : 'Privacy policy of Hairdresser Virginija website: collected data, cookies and your rights.'
+        }
+      />
+      <div className='max-w-3xl mx-auto text-ink space-y-6 leading-relaxed'>
         <h1 className='text-3xl font-serif text-center mb-10'>{L.title}</h1>
 
         <p>{L.intro}</p>
@@ -137,12 +137,12 @@ export default function Privacy() {
 
         {/* ===== BACK BUTTON APAČIOJE ===== */}
         <div className='pt-12 flex justify-center'>
-          <button
-            onClick={goHomeTop}
-            className='px-6 py-3 rounded-full bg-[#C1A173] text-white font-medium hover:opacity-90 transition shadow-md'
+          <Link
+            to={pathFor('home')}
+            className='px-6 py-3 rounded-full bg-gold-dark text-white font-medium hover:opacity-90 transition shadow-md'
           >
             ← {L.back}
-          </button>
+          </Link>
         </div>
       </div>
     </section>

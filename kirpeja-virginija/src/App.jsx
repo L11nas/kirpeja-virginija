@@ -1,158 +1,202 @@
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet-async';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import BackToTop from './components/BackToTop';
 import { useEffect } from 'react';
 import Header from './components/Header';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import Reviews from './components/Reviews';
-import Gallery from './components/Gallery';
 import Footer from './components/Footer';
+import StickyBookingBar from './components/StickyBookingBar';
+import CookieConsent from './components/CookieConsent';
+import Home from './pages/Home';
+import ServicePage from './pages/ServicePage';
 import Privacy from './pages/Privacy';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotFound from './pages/NotFound';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import {
+  BUSINESS,
+  SITE_URL,
+  TREATWELL_BOOK_URL,
+  TREATWELL_PROFILE_URL,
+  FACEBOOK_URL,
+  INSTAGRAM_URL,
+  GOOGLE_MAPS_URL,
+} from './data/business';
+import { SERVICES } from './data/services';
+import { PAGES } from './data/routes';
 
-function AppContent() {
-  const { lang } = useLanguage();
+// Visai svetainei bendra schema: salonas, kirpėja ir svetainė.
+function buildSiteSchema(l) {
+  const salonId = `${SITE_URL}/#salon`;
 
-  const isLT = lang === 'LT';
-  const baseUrl = 'https://kirpeja-virginija.lt';
-  useEffect(() => {
-    if (window.gtag) {
-      window.gtag('event', 'page_view', {
-        page_location: window.location.href,
-        page_path: window.location.pathname,
-        page_title: document.title,
-      });
-    }
-  }, []);
-  const localBusinessSchema = {
-    '@context': 'https://schema.org',
+  const salon = {
     '@type': 'HairSalon',
-    name: 'Kirpėja Virginija',
-    image: `${baseUrl}/img/hero-bg.webp`,
-    url: baseUrl,
-    telephone: '+37065460937',
+    '@id': salonId,
+    name: BUSINESS.name,
+    alternateName: 'Kirpėja Kaune Virginija',
+    description:
+      l === 'lt'
+        ? 'Kirpėja Kaune: moterų, vyrų ir vaikų kirpimas, šukuosenos, barzdos modeliavimas, plaukų dažymo konsultacijos ir plaukų procedūros.'
+        : 'Hairdresser in Kaunas: women’s, men’s and children’s haircuts, styling, beard styling, colour consultations and hair treatments.',
+    url: `${SITE_URL}/`,
+    image: [`${SITE_URL}/img/og-image.jpg`, `${SITE_URL}/img/hero-bg.webp`],
+    logo: `${SITE_URL}/logo.png`,
+    telephone: BUSINESS.phone,
+    priceRange: '5 € – 35 €',
+    currenciesAccepted: 'EUR',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Pramonės pr. 15A',
-      addressLocality: 'Kaunas',
-      addressCountry: 'LT',
+      streetAddress: BUSINESS.street,
+      addressLocality: BUSINESS.city,
+      postalCode: BUSINESS.postalCode,
+      addressRegion: 'Kauno apskritis',
+      addressCountry: BUSINESS.country,
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 54.8985,
-      longitude: 23.9036,
+      latitude: BUSINESS.geo.lat,
+      longitude: BUSINESS.geo.lng,
     },
-    openingHours: ['Mo-Fr 09:00-19:00', 'Sa 09:00-15:00'],
-    priceRange: '€€',
+    hasMap: GOOGLE_MAPS_URL,
+    openingHoursSpecification: [
+      {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: BUSINESS.hours.days,
+        opens: BUSINESS.hours.opens,
+        closes: BUSINESS.hours.closes,
+      },
+    ],
+    areaServed: ['Kaunas', 'Dainava', 'Petrašiūnai', 'Šančiai', 'Eiguliai', 'Žaliakalnis'].map(
+      (name) => ({ '@type': 'Place', name }),
+    ),
     aggregateRating: {
       '@type': 'AggregateRating',
-      ratingValue: 5.0,
-      reviewCount: 94,
+      ratingValue: BUSINESS.rating,
+      reviewCount: BUSINESS.reviewCount,
       bestRating: 5,
       worstRating: 1,
     },
-    sameAs: [
-      'https://book.treatwell.lt/salonas/kirpeja-virginija/',
-      'https://www.facebook.com/people/Kirp%C4%97ja-Virginija/61582796560584/',
-      'https://www.instagram.com/kirpejavirginija',
-    ],
+    employee: { '@id': `${SITE_URL}/#virginija` },
+    potentialAction: {
+      '@type': 'ReserveAction',
+      target: TREATWELL_BOOK_URL,
+      name: l === 'lt' ? 'Registracija internetu' : 'Book online',
+    },
+    sameAs: [TREATWELL_PROFILE_URL, FACEBOOK_URL, INSTAGRAM_URL],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: l === 'lt' ? 'Kirpimo ir plaukų priežiūros paslaugos' : 'Hair services',
+      itemListElement: SERVICES.map((s) => ({
+        '@type': 'Offer',
+        url: TREATWELL_BOOK_URL,
+        priceCurrency: 'EUR',
+        ...(s.price.from
+          ? {
+              priceSpecification: {
+                '@type': 'PriceSpecification',
+                minPrice: Number(s.price.amount),
+                priceCurrency: 'EUR',
+              },
+            }
+          : { price: Number(s.price.amount) }),
+        itemOffered: {
+          '@type': 'Service',
+          name: s.name[l],
+          description: s.desc[l],
+          provider: { '@id': salonId },
+          areaServed: { '@type': 'City', name: 'Kaunas' },
+        },
+      })),
+    },
   };
 
+  const person = {
+    '@type': 'Person',
+    '@id': `${SITE_URL}/#virginija`,
+    name: 'Virginija',
+    jobTitle: l === 'lt' ? 'Kirpėja' : 'Hairdresser',
+    worksFor: { '@id': salonId },
+    knowsAbout: ['Plaukų kirpimas', 'Plaukų dažymas', 'Šukuosenos', 'Barzdos modeliavimas'],
+  };
+
+  const website = {
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    url: `${SITE_URL}/`,
+    name: BUSINESS.name,
+    inLanguage: ['lt-LT', 'en'],
+    publisher: { '@id': salonId },
+  };
+
+  return JSON.stringify({ '@context': 'https://schema.org', '@graph': [website, salon, person] });
+}
+
+function ScrollToTop() {
+  const { pathname, hash } = useLocation();
+  useEffect(() => {
+    if (!hash) window.scrollTo(0, 0);
+  }, [pathname, hash]);
+  return null;
+}
+
+function AppContent() {
+  const { l } = useLanguage();
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.gtag?.('event', 'page_view', {
+      page_location: window.location.href,
+      page_path: window.location.pathname,
+      page_title: document.title,
+    });
+  }, [pathname]);
+
+  const routes = [
+    ['home', <Home />],
+    ['women', <ServicePage pageKey='women' />],
+    ['men', <ServicePage pageKey='men' />],
+    ['kids', <ServicePage pageKey='kids' />],
+    ['privacy', <Privacy />],
+  ];
+
   return (
-    <div className='bg-[#F8F7F4] text-[#2E2B29] font-sans'>
+    <div className='bg-sand text-ink-deep font-sans pb-20 md:pb-0'>
       <Helmet>
-        {/* Canonical */}
-        <link rel='canonical' href={baseUrl} />
-        <meta name='robots' content='index, follow' />
         <meta name='theme-color' content='#C1A173' />
-
-        {/* SEO Title + Desc */}
-        <title>
-          {isLT
-            ? 'Kirpėja Virginija | Kirpimas ir plaukų priežiūra Kaune'
-            : 'Hairdresser Virginija | Haircuts and care in Kaunas'}
-        </title>
-
-        <meta
-          name='description'
-          content={
-            isLT
-              ? 'Kirpėja Virginija – profesionalus kirpimas, dažymas, barzdos modeliavimas ir plaukų priežiūra Kaune.'
-              : 'Hairdresser Virginija – professional haircuts, coloring, beard styling and care in Kaunas.'
-          }
-        />
-
-        {/* Open Graph */}
-        <meta property='og:type' content='website' />
-        <meta property='og:url' content={baseUrl} />
-        <meta
-          property='og:title'
-          content={
-            isLT
-              ? 'Kirpėja Virginija – kirpimo paslaugos Kaune'
-              : 'Hairdresser Virginija – hairdressing services in Kaunas'
-          }
-        />
-        <meta
-          property='og:description'
-          content={
-            isLT
-              ? 'Vyriškas, moteriškas ir vaikų kirpimas, dažymas ir barzdos modeliavimas.'
-              : 'Men’s, women’s, children’s haircuts, coloring and beard styling.'
-          }
-        />
-        <meta property='og:image' content={`${baseUrl}/img/hero-bg.webp`} />
-        <meta property='og:locale' content={isLT ? 'lt_LT' : 'en_GB'} />
-
-        {/* Hreflang (tik tos kalbos kurias turi!) */}
-        <link rel='alternate' hrefLang='lt' href={baseUrl} />
-
-        {/* GEO */}
         <meta name='geo.region' content='LT-KU' />
         <meta name='geo.placename' content='Kaunas' />
-        <meta name='geo.position' content='54.8985;23.9036' />
-
-        {/* JSON-LD */}
-        <script type='application/ld+json'>
-          {JSON.stringify(localBusinessSchema)}
-        </script>
+        <meta name='geo.position' content={`${BUSINESS.geo.lat};${BUSINESS.geo.lng}`} />
+        <meta name='ICBM' content={`${BUSINESS.geo.lat}, ${BUSINESS.geo.lng}`} />
+        <script type='application/ld+json'>{buildSiteSchema(l)}</script>
       </Helmet>
 
+      <ScrollToTop />
       <Header />
 
       {/* MAIN LANDMARK (PageSpeed requirement) */}
       <main id='content' role='main'>
         <Routes>
-          <Route
-            path='/'
-            element={
-              <>
-                <Hero />
-                <Services />
-                <Reviews />
-                <Gallery />
-              </>
-            }
-          />
-          <Route path='/privatumo-politika' element={<Privacy />} />
+          {routes.flatMap(([key, element]) =>
+            ['lt', 'en'].map((lang) => (
+              <Route key={`${key}-${lang}`} path={PAGES[key][lang]} element={element} />
+            )),
+          )}
+          <Route path='*' element={<NotFound />} />
         </Routes>
       </main>
 
       <Footer />
+      <StickyBookingBar />
+      <CookieConsent />
       <BackToTop />
     </div>
   );
 }
 
+// Router ir HelmetProvider pateikiami iš main.jsx (naršyklė)
+// arba entry-server.jsx (statinis puslapių generavimas build metu).
 export default function App() {
   return (
-    <HelmetProvider>
-      <LanguageProvider>
-        <BrowserRouter>
-          <AppContent />
-        </BrowserRouter>
-      </LanguageProvider>
-    </HelmetProvider>
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 }

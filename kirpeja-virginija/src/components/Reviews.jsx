@@ -2,14 +2,15 @@ import { Star } from 'lucide-react';
 import { useEffect } from 'react';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
+import { BUSINESS } from '../data/business';
 
 const TREATWELL_BOOK_URL =
   'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 const TREATWELL_REVIEWS_URL =
   'https://www.treatwell.lt/salonas/kirpeja-virginija/';
 
-const RATING = 5.0;
-const REVIEW_COUNT = 94;
+const RATING = BUSINESS.rating;
+const REVIEW_COUNT = BUSINESS.reviewCount;
 
 const SUBRATINGS = [
   { key: 'atmosphere', value: 5 },
@@ -18,6 +19,33 @@ const SUBRATINGS = [
 ];
 
 const TESTIMONIALS = [
+  {
+    id: 'tomas',
+    rating: 5,
+    quote: {
+      lt: 'Tikra savo srities specialistė. Viskas puikiai. Sėkmės darbuose!',
+      en: 'A true specialist in her field. Everything was great. Best of luck!',
+    },
+    author: 'Tomas',
+  },
+  {
+    id: 'ausra',
+    rating: 5,
+    quote: {
+      lt: 'Ačiū, labai gražiai apkirpo ir davė daug patarimų.',
+      en: 'Thank you – a lovely haircut and lots of useful advice.',
+    },
+    author: 'Aušra',
+  },
+  {
+    id: 'vytaute',
+    rating: 5,
+    quote: {
+      lt: 'Labai faina kirpėja :) Didžiausios rekomendacijos!',
+      en: 'Such a lovely hairdresser :) Highly recommended!',
+    },
+    author: 'Vytautė',
+  },
   {
     id: 'sigitas',
     rating: 5,
@@ -49,8 +77,8 @@ function Stars({ count = 5, size = 18, className = '' }) {
           size={size}
           className={
             i < count
-              ? 'fill-[#C1A173] text-[#C1A173]'
-              : 'fill-transparent text-[#D9D3C8]'
+              ? 'fill-gold text-gold'
+              : 'fill-transparent text-white/25'
           }
         />
       ))}
@@ -133,40 +161,40 @@ export default function Reviews() {
   return (
     <section
       id='atsiliepimai'
-      className='py-20 bg-white'
+      className='py-20 bg-ink-deep text-white'
       aria-labelledby='reviews-heading'
       aria-label={t[lang].sectionAria}
     >
       <div className='max-w-5xl mx-auto px-6 text-center'>
-        <p className='text-[#C1A173] text-sm uppercase tracking-[0.2em] mb-3'>
+        <p className='text-gold text-sm uppercase tracking-[0.2em] mb-3'>
           {t[lang].eyebrow}
         </p>
 
         <h2
           id='reviews-heading'
-          className='text-3xl font-serif mb-4 text-[#3E3B38]'
+          className='text-3xl font-serif mb-4 text-white'
         >
           {t[lang].title}
         </h2>
 
         <div className='flex flex-col items-center gap-2 mb-3'>
-          <span className='text-5xl font-serif text-[#3E3B38]'>
+          <span className='text-5xl font-serif text-white'>
             {t[lang].ratingLabel}
           </span>
           <Stars count={5} size={24} />
-          <span className='text-sm text-[#6B6966]'>
+          <span className='text-sm text-white/70'>
             {t[lang].reviewCountLabel}
           </span>
         </div>
 
-        <p className='max-w-2xl mx-auto text-sm md:text-base text-[#6B6966] mb-10 leading-relaxed'>
+        <p className='max-w-2xl mx-auto text-sm md:text-base text-white/70 mb-10 leading-relaxed'>
           {t[lang].subtitle}
         </p>
 
         <div className='flex flex-wrap justify-center gap-x-10 gap-y-4 mb-12'>
           {SUBRATINGS.map((s) => (
             <div key={s.key} className='flex flex-col items-center gap-1'>
-              <span className='text-sm text-[#3E3B38] font-medium'>
+              <span className='text-sm text-white/90 font-medium'>
                 {t[lang].subratings[s.key]}
               </span>
               <Stars count={s.value} size={16} />
@@ -174,19 +202,19 @@ export default function Reviews() {
           ))}
         </div>
 
-        <div className='grid md:grid-cols-2 gap-6 text-left mb-12'>
+        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6 text-left mb-12'>
           {TESTIMONIALS.map((r) => (
             <div
               key={r.id}
-              className='p-6 border border-[#e5e4e1] rounded-xl bg-[#F8F7F4]'
+              className='p-6 border border-white/10 rounded-xl bg-white/5'
             >
               <Stars count={r.rating} size={16} className='mb-3' />
-              <p className='text-[#3E3B38] leading-relaxed mb-4'>
+              <p className='text-white/90 leading-relaxed mb-4'>
                 “{r.quote[selectedLang]}”
               </p>
-              <div className='flex items-center justify-between text-sm text-[#6B6966]'>
-                <span className='font-medium text-[#3E3B38]'>{r.author}</span>
-                <span>{r.service[selectedLang]}</span>
+              <div className='flex items-center justify-between text-sm text-white/60'>
+                <span className='font-medium text-gold'>{r.author}</span>
+                {r.service && <span>{r.service[selectedLang]}</span>}
               </div>
             </div>
           ))}
@@ -204,7 +232,7 @@ export default function Reviews() {
                 destination: 'treatwell_reviews',
               })
             }
-            className='text-sm font-medium text-[#3E3B38] underline hover:text-[#8A744F] transition'
+            className='text-sm font-medium text-white underline hover:text-gold transition'
           >
             {t[lang].readAll}
           </a>
@@ -215,6 +243,7 @@ export default function Reviews() {
             target='_blank'
             rel='noopener noreferrer'
             aria-label={t[lang].bookAria}
+            variant='light'
             className='px-8 py-3'
             onClick={() =>
               trackEvent('booking_click', {

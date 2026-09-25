@@ -47,15 +47,15 @@ export default function BackToTop() {
       aria-label={t[lang].aria}
       title={t[lang].title}
       className={`
-        fixed bottom-6 right-6 z-50
+        fixed bottom-24 md:bottom-6 right-4 md:right-6 z-30
         backdrop-blur-lg bg-white/30
         shadow-[0_8px_20px_rgba(0,0,0,0.25)]
         border border-white/40
-        text-[#C1A173]
+        text-gold
         w-12 h-12 rounded-full
         flex items-center justify-center
         transition-all duration-300
-        focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60
+        focus:outline-none focus:ring-2 focus:ring-gold/60
         ${
           visible
             ? 'opacity-100 translate-y-0'

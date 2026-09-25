@@ -198,16 +198,7 @@ export default function Gallery() {
       '@type': 'CollectionPage',
       name: lang === 'LT' ? 'Kirpėjos darbų galerija' : 'Hairdresser gallery',
       url: SITE_URL,
-      about: {
-        '@type': 'HairSalon',
-        name: 'Kirpėja Virginija',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'Pramonės pr. 15A',
-          addressLocality: 'Kaunas',
-          addressCountry: 'LT',
-        },
-      },
+      about: { '@id': 'https://kirpeja-virginija.lt/#salon' },
       hasPart: [...images, ...videos],
     });
   }, [allItems, lang]);
@@ -275,34 +266,10 @@ export default function Gallery() {
   return (
     <section
       id='galerija'
-      className='py-20 bg-[#F8F7F4]'
+      className='py-20 bg-white'
       aria-labelledby='gallery-heading'
     >
       <Helmet>
-        <meta name='description' content={t[lang].desc} />
-        <meta
-          property='og:title'
-          content={`${t[lang].title} | Kirpėja Virginija`}
-        />
-        <meta property='og:description' content={t[lang].desc} />
-        <meta property='og:type' content='website' />
-        <meta
-          property='og:locale'
-          content={lang === 'LT' ? 'lt_LT' : 'en_GB'}
-        />
-        <meta property='og:url' content={SITE_URL} />
-        <meta property='og:image' content={`${SITE_URL}logo.png`} />
-        <meta name='twitter:card' content='summary_large_image' />
-        <meta
-          name='twitter:title'
-          content={`${t[lang].title} | Kirpėja Virginija`}
-        />
-        <meta name='twitter:description' content={t[lang].desc} />
-        <meta name='twitter:image' content={`${SITE_URL}logo.png`} />
-
-        {/* Jeigu galerija yra tik homepage sekcija, canonical turi likti pagrindinis */}
-        <link rel='canonical' href={SITE_URL} />
-
         <script type='application/ld+json'>{galleryStructuredData}</script>
 
         {filtered
@@ -316,12 +283,12 @@ export default function Gallery() {
       <div className='max-w-6xl mx-auto px-6'>
         <h2
           id='gallery-heading'
-          className='text-3xl font-serif text-center mb-4 text-[#3E3B38]'
+          className='text-3xl font-serif text-center mb-4 text-ink'
         >
           {t[lang].title}
         </h2>
 
-        <p className='max-w-3xl mx-auto text-center text-sm md:text-base text-[#6B6966] mb-8'>
+        <p className='max-w-3xl mx-auto text-center text-sm md:text-base text-muted mb-8'>
           {lang === 'LT'
             ? 'Peržiūrėkite Kirpėjos Virginijos atliktus moterų, vyrų ir vaikų kirpimus, šukuosenas bei kitus plaukų formavimo darbus Kaune.'
             : 'Browse women’s, men’s and children’s haircuts, hairstyles and other hair styling work by Hairdresser Virginija in Kaunas.'}
@@ -355,15 +322,15 @@ export default function Gallery() {
                 }}
                 className={[
                   'px-4 py-2 rounded-full text-sm font-medium transition',
-                  'border focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60',
+                  'border focus:outline-none focus:ring-2 focus:ring-gold/60',
                   active
-                    ? 'bg-[#C1A173] text-white border-[#C1A173]'
-                    : 'bg-white/60 text-[#3E3B38] border-black/10 hover:bg-white',
+                    ? 'bg-gold-dark text-white border-gold'
+                    : 'bg-sand text-ink border-black/10 hover:bg-sand-deep',
                 ].join(' ')}
               >
                 {c.label}{' '}
                 <span
-                  className={active ? 'text-white/90' : 'text-[#3E3B38]/60'}
+                  className={active ? 'text-white/90' : 'text-ink/60'}
                 >
                   ({counts[c.id] ?? 0})
                 </span>
@@ -389,7 +356,7 @@ export default function Gallery() {
                       event_label: `video_${item.id}`,
                     });
                   }}
-                  className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all aspect-[9/16]'
+                  className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-gold transition-all aspect-[9/16]'
                   aria-label={t[lang].openVideo(item.id)}
                 >
                   <img
@@ -398,7 +365,7 @@ export default function Gallery() {
                     loading={idx < 1 ? 'eager' : 'lazy'}
                     fetchPriority={idx < 1 ? 'high' : 'auto'}
                     decoding='async'
-                    className='object-cover w-full h-full bg-[#EDEBE8]'
+                    className='object-cover w-full h-full bg-sand-deep'
                   />
                   <div className='absolute inset-0 bg-black/25 group-hover:bg-black/35 transition' />
                   <div className='absolute inset-0 flex items-center justify-center'>
@@ -436,7 +403,7 @@ export default function Gallery() {
                   contentVisibility: 'auto',
                   containIntrinsicSize: '320px 256px',
                 }}
-                className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-[#C1A173] transition-all'
+                className='relative overflow-hidden rounded-xl group focus:outline-none focus:ring-2 focus:ring-gold transition-all'
                 aria-label={t[lang].openPhoto(item.category, item.index)}
               >
                 <img
@@ -447,7 +414,7 @@ export default function Gallery() {
                   decoding='async'
                   width='400'
                   height='400'
-                  className='object-cover w-full h-44 sm:h-56 md:h-64 transition-transform duration-300 group-hover:scale-105 bg-[#EDEBE8]'
+                  className='object-cover w-full h-44 sm:h-56 md:h-64 transition-transform duration-300 group-hover:scale-105 bg-sand-deep'
                 />
               </button>
             );

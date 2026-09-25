@@ -1,15 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://kirpeja-virginija.lt/</loc>
+    <lastmod>2026-09-25</lastmod>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/"/>
   </url>
   <url>
-    <loc>https://kirpeja-virginija.lt/galerija</loc>
-    <priority>0.8</priority>
+    <loc>https://kirpeja-virginija.lt/en/</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/"/>
   </url>
   <url>
-    <loc>https://kirpeja-virginija.lt/kontaktai</loc>
+    <loc>https://kirpeja-virginija.lt/moteru-kirpimas-kaune</loc>
+    <lastmod>2026-09-25</lastmod>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/moteru-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/womens-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/moteru-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/en/womens-haircut-kaunas</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/moteru-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/womens-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/moteru-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/vyru-kirpimas-kaune</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/vyru-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/mens-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/vyru-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/en/mens-haircut-kaunas</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/vyru-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/mens-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/vyru-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/vaiku-kirpimas-kaune</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/vaiku-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/kids-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/vaiku-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/en/kids-haircut-kaunas</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/vaiku-kirpimas-kaune"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/kids-haircut-kaunas"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/vaiku-kirpimas-kaune"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/privatumo-politika</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/privatumo-politika"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/privatumo-politika"/>
+  </url>
+  <url>
+    <loc>https://kirpeja-virginija.lt/en/privacy-policy</loc>
+    <lastmod>2026-09-25</lastmod>
+    <priority>0.2</priority>
+    <xhtml:link rel="alternate" hreflang="lt" href="https://kirpeja-virginija.lt/privatumo-politika"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://kirpeja-virginija.lt/en/privacy-policy"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://kirpeja-virginija.lt/privatumo-politika"/>
   </url>
 </urlset>

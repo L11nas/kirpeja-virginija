@@ -1,5 +1,9 @@
 https://kirpeja-virginija.netlify.app/*    https://kirpeja-virginija.lt/:splat    301
-/*    /index.html    200
 
+# Seni adresai (buvo sitemap'e) -> pagrindinis puslapis
+/galerija    /    301
+/kontaktai   /    301
 
-
+# Visi puslapiai sugeneruoti kaip statiniai HTML failai (scripts/prerender.mjs).
+# Neegzistuojantys adresai grąžina tikrą 404 klaidą.
+/*    /404.html    404

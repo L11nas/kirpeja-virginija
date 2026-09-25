@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Menu, X, Phone } from 'lucide-react';
 import Button from '../components/ui/Button';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigate } from 'react-router-dom';
 
 const PHONE_TEL = 'tel:+37065460937';
 const TREATWELL_URL = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
@@ -10,7 +11,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const { lang, toggleLang } = useLanguage();
+  const { lang, toggleLang, page, pathFor } = useLanguage();
+  const navigate = useNavigate();
+  const home = pathFor('home');
 
   const trackEvent = (eventName, params = {}) => {
     window.gtag?.('event', eventName, {
@@ -24,6 +27,7 @@ export default function Header() {
   const t = {
     LT: {
       services: 'Paslaugos',
+      about: 'Apie',
       reviews: 'Atsiliepimai',
       gallery: 'Galerija',
       contact: 'Kontaktai',
@@ -37,6 +41,7 @@ export default function Header() {
       bookAria: 'Registruotis vizitui internetu per Treatwell',
       callAria: 'Skambinti kirpėjai Virginijai',
       servicesAria: 'Pereiti į paslaugų skiltį',
+      aboutAria: 'Pereiti į skiltį apie kirpėją',
       reviewsAria: 'Pereiti į atsiliepimų skiltį',
       galleryAria: 'Pereiti į galerijos skiltį',
       contactAria: 'Pereiti į kontaktų skiltį',
@@ -44,6 +49,7 @@ export default function Header() {
     },
     EN: {
       services: 'Services',
+      about: 'About',
       reviews: 'Reviews',
       gallery: 'Gallery',
       contact: 'Contact',
@@ -57,6 +63,7 @@ export default function Header() {
       bookAria: 'Book an appointment online via Treatwell',
       callAria: 'Call hairdresser Virginija',
       servicesAria: 'Go to services section',
+      aboutAria: 'Go to about section',
       reviewsAria: 'Go to reviews section',
       galleryAria: 'Go to gallery section',
       contactAria: 'Go to contact section',
@@ -84,16 +91,17 @@ export default function Header() {
         hidden ? '-translate-y-full' : 'translate-y-0'
       } ${
         scrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-[#e5e4e1]'
+          ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-line'
           : 'bg-white/90 backdrop-blur-md border-b border-transparent'
       }`}
     >
       <div className='max-w-6xl mx-auto flex justify-between items-center py-3 px-6'>
         <a
-          href='#hero'
+          href={home}
           onClick={(e) => {
             e.preventDefault();
             setMenuOpen(false);
+            if (page !== 'home') navigate(home);
             trackEvent('nav_click', {
               link_location: 'header',
               target_section: 'hero',
@@ -105,19 +113,19 @@ export default function Header() {
           aria-label={t[lang].backToTop}
           title={t[lang].logoLabel}
         >
-          <div className='leading-tight font-serif text-[#3E3B38]'>
+          <div className='leading-tight font-serif text-ink'>
             <span className='block text-lg'>Kirpėja</span>
-            <span className='block -mt-1 text-[#C1A173]'>Virginija</span>
+            <span className='block -mt-1 text-gold'>Virginija</span>
           </div>
         </a>
 
         <nav
-          className='hidden md:flex items-center gap-6 text-[#3E3B38]'
+          className='hidden md:flex items-center gap-6 text-ink'
           aria-label={t[lang].mainNav}
         >
           <a
-            href='#paslaugos'
-            className='hover:text-[#C1A173] transition'
+            href={`${home}#paslaugos`}
+            className='hover:text-gold-dark transition'
             aria-label={t[lang].servicesAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -131,8 +139,23 @@ export default function Header() {
           </a>
 
           <a
-            href='#atsiliepimai'
-            className='hover:text-[#C1A173] transition'
+            href={`${home}#apie`}
+            className='hover:text-gold-dark transition'
+            aria-label={t[lang].aboutAria}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'header',
+                target_section: 'about',
+                device_type: 'desktop',
+              });
+            }}
+          >
+            {t[lang].about}
+          </a>
+
+          <a
+            href={`${home}#atsiliepimai`}
+            className='hover:text-gold-dark transition'
             aria-label={t[lang].reviewsAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -146,8 +169,8 @@ export default function Header() {
           </a>
 
           <a
-            href='#galerija'
-            className='hover:text-[#C1A173] transition'
+            href={`${home}#galerija`}
+            className='hover:text-gold-dark transition'
             aria-label={t[lang].galleryAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -161,8 +184,8 @@ export default function Header() {
           </a>
 
           <a
-            href='#kontaktai'
-            className='hover:text-[#C1A173] transition'
+            href={`${home}#kaip-atvykti`}
+            className='hover:text-gold-dark transition'
             aria-label={t[lang].contactAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -177,7 +200,7 @@ export default function Header() {
 
           <a
             href={PHONE_TEL}
-            className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
+            className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-sand text-ink border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-gold/60'
             onClick={() => {
               trackEvent('phone_click', {
                 link_location: 'header',
@@ -188,7 +211,7 @@ export default function Header() {
             aria-label={t[lang].callAria}
             title={t[lang].call}
           >
-            <Phone size={18} className='text-[#C1A173]' />
+            <Phone size={18} className='text-gold' />
             <span className='text-sm font-medium'>{t[lang].call}</span>
           </a>
 
@@ -196,7 +219,7 @@ export default function Header() {
             className='hidden md:flex items-center'
             aria-label={t[lang].switchLang}
           >
-            <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
+            <div className='flex items-center bg-sand rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
@@ -216,8 +239,8 @@ export default function Header() {
                   aria-label={`${t[lang].switchLang}: ${code}`}
                   className={`px-4 py-1 text-sm font-medium rounded-full transition-all ${
                     lang === code
-                      ? 'bg-[#C1A173] text-white shadow-sm'
-                      : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
+                      ? 'bg-gold-dark text-white shadow-sm'
+                      : 'text-gold-dark hover:bg-sand-deep'
                   }`}
                 >
                   {code}
@@ -249,7 +272,7 @@ export default function Header() {
         <div className='md:hidden flex items-center gap-2'>
           <a
             href={PHONE_TEL}
-            className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#F5F3EF] text-[#3E3B38] border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-[#C1A173]/60'
+            className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-sand text-ink border border-black/10 hover:bg-white transition focus:outline-none focus:ring-2 focus:ring-gold/60'
             onClick={() => {
               trackEvent('phone_click', {
                 link_location: 'header',
@@ -260,13 +283,13 @@ export default function Header() {
             aria-label={t[lang].callAria}
             title={t[lang].call}
           >
-            <Phone size={18} className='text-[#C1A173]' />
+            <Phone size={18} className='text-gold' />
           </a>
 
           <button
             type='button'
             onClick={() => setMenuOpen((v) => !v)}
-            className='text-[#3E3B38]'
+            className='text-ink'
             aria-label={menuOpen ? t[lang].closeMenu : t[lang].openMenu}
             aria-expanded={menuOpen}
             aria-controls='mobile-menu'
@@ -279,12 +302,12 @@ export default function Header() {
       {menuOpen && (
         <nav
           id='mobile-menu'
-          className='md:hidden bg-white border-t border-[#e5e4e1] text-center py-4 space-y-3'
+          className='md:hidden bg-white border-t border-line text-center py-4 space-y-3'
           aria-label={t[lang].mainNav}
         >
           <a
-            href='#paslaugos'
-            className='block hover:text-[#C1A173]'
+            href={`${home}#paslaugos`}
+            className='block hover:text-gold-dark'
             aria-label={t[lang].servicesAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -299,8 +322,24 @@ export default function Header() {
           </a>
 
           <a
-            href='#atsiliepimai'
-            className='block hover:text-[#C1A173]'
+            href={`${home}#apie`}
+            className='block hover:text-gold-dark'
+            aria-label={t[lang].aboutAria}
+            onClick={() => {
+              trackEvent('nav_click', {
+                link_location: 'mobile_menu',
+                target_section: 'about',
+                device_type: 'mobile',
+              });
+              setMenuOpen(false);
+            }}
+          >
+            {t[lang].about}
+          </a>
+
+          <a
+            href={`${home}#atsiliepimai`}
+            className='block hover:text-gold-dark'
             aria-label={t[lang].reviewsAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -315,8 +354,8 @@ export default function Header() {
           </a>
 
           <a
-            href='#galerija'
-            className='block hover:text-[#C1A173]'
+            href={`${home}#galerija`}
+            className='block hover:text-gold-dark'
             aria-label={t[lang].galleryAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -331,8 +370,8 @@ export default function Header() {
           </a>
 
           <a
-            href='#kontaktai'
-            className='block hover:text-[#C1A173]'
+            href={`${home}#kaip-atvykti`}
+            className='block hover:text-gold-dark'
             aria-label={t[lang].contactAria}
             onClick={() => {
               trackEvent('nav_click', {
@@ -370,7 +409,7 @@ export default function Header() {
             className='flex justify-center pt-2'
             aria-label={t[lang].switchLang}
           >
-            <div className='flex items-center bg-[#F5F3EF] rounded-full px-1 py-[3px]'>
+            <div className='flex items-center bg-sand rounded-full px-1 py-[3px]'>
               {['LT', 'EN'].map((code) => (
                 <button
                   key={code}
@@ -391,8 +430,8 @@ export default function Header() {
                   aria-label={`${t[lang].switchLang}: ${code}`}
                   className={`px-4 py-1 text-sm font-medium rounded-full ${
                     lang === code
-                      ? 'bg-[#C1A173] text-white'
-                      : 'text-[#6B5A40] hover:bg-[#E8E2D8]'
+                      ? 'bg-gold-dark text-white'
+                      : 'text-gold-dark hover:bg-sand-deep'
                   }`}
                 >
                   {code}

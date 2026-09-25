@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 export default function Hero() {
   const { lang } = useLanguage();
   const [videoReady, setVideoReady] = useState(false);
+  const [loadVideo, setLoadVideo] = useState(false);
 
   const treatwellUrl = 'https://book.treatwell.lt/salonas/kirpeja-virginija/';
 
@@ -16,6 +17,15 @@ export default function Hero() {
       ...params,
     });
   };
+
+  // Telefone (ir kai įjungtas duomenų taupymas) video nekrauname – rodoma tik nuotrauka.
+  useEffect(() => {
+    const saveData = navigator.connection?.saveData;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (window.matchMedia('(min-width: 768px)').matches && !saveData && !reducedMotion) {
+      setLoadVideo(true);
+    }
+  }, []);
 
   useEffect(() => {
     trackEvent('hero_view', {
@@ -64,6 +74,7 @@ export default function Hero() {
         }`}
       />
 
+      {loadVideo && (
       <video
         className='absolute inset-0 w-full h-full object-cover pointer-events-none'
         style={{ filter: 'brightness(0.9)', transform: 'scale(1.05)' }}
@@ -71,7 +82,7 @@ export default function Hero() {
         muted
         loop
         playsInline
-        preload='auto'
+        preload='metadata'
         aria-hidden='true'
         onLoadedData={() => setVideoReady(true)}
         onError={() => setVideoReady(false)}
@@ -83,6 +94,7 @@ export default function Hero() {
       >
         <source src='/hero/hero.mp4' type='video/mp4' />
       </video>
+      )}
 
       <div className='absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white/90' />
 

@@ -4,52 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- TITLE (labai svarbu) -->
-    <title>Kirpėja Kaune – Virginija | Moterų ir vyrų kirpimas Dainava</title>
-
-    <!-- DESCRIPTION -->
-    <meta
-      name="description"
-      content="Kirpėja Kaune (Dainava) – moterų ir vyrų kirpimas, plaukų dažymas, barzdos modeliavimas. Adresas: Pramonės pr. 15A. Registracija telefonu."
-    />
-
-    <!-- CANONICAL -->
-    <link rel="canonical" href="https://kirpeja-virginija.lt/" />
+    <!--
+      SEO žymos (title, description, Open Graph, JSON-LD) valdomos App.jsx
+      ir build metu įrašomos čia (scripts/prerender.mjs).
+    -->
 
     <!-- FAVICON -->
-    <link rel="icon" href="/favicon.png" />
-
-    <!-- OPEN GRAPH -->
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="Kirpėja Kaune – Virginija" />
-    <meta
-      property="og:description"
-      content="Profesionalus kirpimas Kaune. Patogu iš Dainavos, Šančių, Petrašiūnų."
-    />
-    <meta property="og:url" content="https://kirpeja-virginija.lt/" />
-    <meta property="og:image" content="https://kirpeja-virginija.lt/logo.png" />
-
-    <!-- GOOGLE -->
-    <meta name="robots" content="index, follow" />
-
-    <!-- SCHEMA (LABAI SVARBU) -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "HairSalon",
-        "name": "Kirpėja Virginija",
-        "image": "https://kirpeja-virginija.lt/logo.png",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "Pramonės pr. 15A",
-          "addressLocality": "Kaunas",
-          "addressCountry": "LT"
-        },
-        "areaServed": "Kaunas",
-        "priceRange": "€€",
-        "url": "https://kirpeja-virginija.lt/"
-      }
-    </script>
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/logo.png" />
 
     <!-- Google tag (gtag.js) -->
     <script
@@ -61,6 +24,17 @@
       function gtag() {
         dataLayer.push(arguments);
       }
+      // Google Consent Mode: statistika renkama tik gavus sutikimą (CookieConsent.jsx)
+      var consent = null;
+      try {
+        consent = localStorage.getItem('cookie-consent');
+      } catch (e) {}
+      gtag('consent', 'default', {
+        analytics_storage: consent === 'granted' ? 'granted' : 'denied',
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+      });
       gtag('js', new Date());
 
       gtag('config', 'G-5M9C3TTG9Z');
