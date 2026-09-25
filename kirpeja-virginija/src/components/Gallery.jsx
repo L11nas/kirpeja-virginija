@@ -188,7 +188,15 @@ export default function Gallery() {
       .map((item) => ({
         '@type': 'VideoObject',
         name:
-          lang === 'LT' ? 'Kirpėjos darbo procesas' : 'Hairdressing process',
+          lang === 'LT'
+            ? `Kirpėjos Virginijos darbo procesas Kaune (${item.id})`
+            : `Hairdresser Virginija at work in Kaunas (${item.id})`,
+        description:
+          lang === 'LT'
+            ? 'Trumpas video iš kirpėjos Virginijos salono Kaune – kirpimo ir plaukų formavimo procesas.'
+            : 'Short video from Hairdresser Virginija’s salon in Kaunas showing the haircut and styling process.',
+        // Google reikalauja uploadDate – data, kai video įkeltas į svetainę
+        uploadDate: '2026-02-06T16:58:15+02:00',
         contentUrl: `${SITE_URL.replace(/\/$/, '')}${item.src}`,
         thumbnailUrl: `${SITE_URL.replace(/\/$/, '')}${item.poster}`,
       }));
